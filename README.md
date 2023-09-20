@@ -7,7 +7,7 @@ reproducibility purposes and is **not organized as a package**. The implementati
 [laure.ciernik@gmail.com](mailto:laure.ciernik@gmail.com). 
 
 ### Disclaimer
-After downloading the data (see below), fill in the path placeholders in `data/constants.py` as indicated by the `TODO` string. Note that the code expects the following structure: the path to the project folder should be assigned to `BASE_PATH_DRIVE`, with subfolders `data` (containing the downloaded data) and `experiments`. Placeholders for file paths have also been inserted in some `.R` and `.sh` files. These placeholders are indicated by `TODO` strings and must be replaced for proper execution. In case of problems, do not hesitate to contact
+After downloading the data (see below), fill in the path placeholders in `data/constants.py` as indicated by the `TODO` string. Note that the code expects the following structure: the path to the project folder should be assigned to `BASE_PATH_DRIVE`, with subfolders `data` (containing the downloaded data) and `experiments`. Placeholders for file paths have also been inserted in some jupyter notebooks, `.R` and `.sh` files. These placeholders are indicated by `TODO` strings and must be replaced for proper execution. In case of problems, do not hesitate to contact
 [laure.ciernik@gmail.com](mailto:laure.ciernik@gmail.com).
 
 ## Content
@@ -24,6 +24,7 @@ The repository is structured as follows:
 │   ├── comparable_score_ranges
 │   ├── control_bias
 │   ├── data_composition_experiments
+│   ├── runtime
 │   ├── signature_lengths_experiments
 │   ├── signature_noise_addition_experiments
 │   ├── run_all_experiments_on_dataset.sh
@@ -41,7 +42,7 @@ The repository is structured as follows:
 ```
 - The folder `data` contains helper files for preprocessing and loading desired datasets and the files for DGEX to get signatures for the malignant phenotype. **NOTE**: Make sure to adapt the paths in `constants.py` to the location where the data is stored. See "Data Availability" below.
 - The folders `experiments` and `notebooks` contain the code for executed experiments.
-  - Benchmarking experiments can be run with the `experiments/run_all_cancer_experiments_on_dataset.sh` and `experiments/run_pbmc_experiments.sh` bash scripts. 
+  - Benchmarking experiments can be run with the `experiments/run_all_cancer_experiments_on_dataset.sh` and `experiments/run_pbmc_experiments.sh` bash scripts and the jupyter notebook in the `runtime` folder. 
   - Details of the benchmarking experiments can be found in the folders of the corresponding experiment.
   - `EMT_scoring_experiments` code for the case study: decoupling the EMT signal in stromal and cancer cells. 
   
@@ -55,12 +56,13 @@ pip install -r requirements.txt
 ```
 
 ## Rerunning experiments
-After downloading the data and correctly modifying the paths as described in the "Content"-part, we can run the experiments. The figures for the experiments are created in the `notebooks` folder. **Note:** Manual correction of the storing paths in the jupyter notebooks might be required.  
-- Preprocessing (This step can be skipped if preprocessed data and signatures have been downloaded): Make sure to download all the datasets of the `cansig_preprocessed` folder (see "Data Availability" below). Run the `data/run_preprocessing_cancer.sh` script for a desired dataset (CRC, ESCC, LUAD, breast cancer). Then get the malignant signatures by running `data/run_dgex_cancer_sigs_with_pseudobulks.sh`. 
+After downloading the data (see below) and correctly modifying the paths in `data/constants.py`, we can run the experiments. The figures for the experiments are created in the `notebooks` folder. **Note:** Manual correction of the storing paths in the jupyter notebooks might be required.  
+- Preprocessing (This step can be skipped if preprocessed data and signatures have been downloaded): Make sure to download all the datasets of the `cansig_preprocessed` folder (see "Data Availability" below). Run the `data/run_preprocessing_cancer.sh` script for a desired dataset (CRC, ESCC, LUAD, breast cancer). Then, get the malignant signatures by running `data/run_dgex_cancer_sigs_with_pseudobulks.sh`. 
 - Benchmark experiments (**NOTE: Change the storing paths in the bash files**):
     - The optimal control gene selection/ induced control bias and the comparable score range experiments can be rerun by running `experiments/run_pbmc_experiments.sh` bash script. **NOTE**: Change the storing paths in the bash files of the comparable score range experiments, i.e.,`experiments/comparable_score_ranges/run_exp_[...].sh`
 
     - The "data composition," "signature length," and "noise robustness experiments" can be rerun by running `experiments/run_all_cancer_experiments_on_dataset.sh` bash script with a desired preprocessed dataset (CRC, ESCC, LUAD, breast cancer).
+    - The `runtime` experiment can be reproduced by running the jupyter notebook in the `experiments/runtime` folder. 
     - Run the different Jupyter notebooks in the `notebooks` folder to create the remaining visualizations. 
 - EMT case study:
     - For each cancer type (CRC, ESCC, LUAD, breast cancer) run the `get_cancer_emt_cells.ipynb` Jupyter notebook (`notebooks/EMT_scoring_experiments/CANCER_TYPE`)
