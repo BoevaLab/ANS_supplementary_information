@@ -1,0 +1,10 @@
+.DS_Store
+*/.DS_Store
+__pycache__
+*/__pycache__
+*.ipynb_checkpoints
+.Rhistory
+.idea
+.vscode
+plots/comparison_scoring_functions
+plots/cell_cycle_control_set_ratio_plots
