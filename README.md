@@ -1,6 +1,6 @@
 # ANS: Adjusted Neighborhood Scoring to  improve assessment of gene signatures in single-cell RNA-seq data
 This repository accompanies the work:
-Laure Ciernik, Agnieszka Kraft, Florian Barkmann, Joséphine Yates, and Valentina Boeva, “ANS: Adjusted Neighborhood Scoring to  improve assessment of gene signatures in single-cell RNA-seq data”.
+Laure Ciernik, Agnieszka Kraft, Florian Barkmann, Joséphine Yates, and Valentina Boeva, “ANS: Adjusted Neighborhood Scoring to  improve assessment of gene signatures in single-cell RNA-seq data”. doi: [https://doi.org/10.1101/2023.09.20.558114](https://doi.org/10.1101/2023.09.20.558114)
 
 It contains the Jupyter notebooks and scripts used for the experiments and visualizations. The code presented is shared for 
 reproducibility purposes and is **not organized as a package**. The implementation of the novel signature scoring method ANS and others used in the article can be found and installed from the following [packaged GitHub repository](https://github.com/lciernik/ANS_signature_scoring). For further information, contact 
