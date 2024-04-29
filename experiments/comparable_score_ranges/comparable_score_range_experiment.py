@@ -10,9 +10,6 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import scanpy as sc
-from signaturescoring import score_signature
-from signaturescoring.scoring_methods.gmm_postprocessing import GMMPostprocessor
-from signaturescoring.utils.utils import get_mean_and_variance_gene_expression, check_signature_genes
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.metrics import (
     balanced_accuracy_score,
@@ -23,8 +20,13 @@ from sklearn.metrics import (
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 
+from signaturescoring import score_signature
+from signaturescoring.scoring_methods.gmm_postprocessing import GMMPostprocessor
+from signaturescoring.utils.utils import get_mean_and_variance_gene_expression, check_signature_genes
+
 sys.path.append("..")
 from experiment_utils import AttributeDict
+
 sys.path.append("../..")
 from data.constants import NORM_METHODS, BASE_PATH_DATA, BASE_PATH_EXPERIMENTS
 from data.load_data import load_datasets
@@ -281,12 +283,12 @@ def _remove_overlapping_genes(SG_subtypes):
 def _remove_genes_w_too_high_expr(adata, SG_subtypes, ctrl_size=100):
     for key, val in SG_subtypes.items():
         SG_subtypes[key] = list(val)
-        SG_subtypes[key]  = check_signature_genes(adata.var_names, val)
+        SG_subtypes[key] = check_signature_genes(adata.var_names, val)
     df_mean_var = get_mean_and_variance_gene_expression(adata)
     gene_means = df_mean_var["mean"].copy()
     sorted_gene_means = gene_means.sort_values()
     not_allowed = set(
-        sorted_gene_means.iloc[-(ctrl_size // 2) :].index.tolist()
+        sorted_gene_means.iloc[-(ctrl_size // 2):].index.tolist()
         + sorted_gene_means.iloc[: (ctrl_size // 2)].index.tolist()
     )
     return {
@@ -312,12 +314,12 @@ def _get_celltype_signatures(config, adata):
 
     if not config.overlapping_sigs:
         SG_subtypes = _remove_overlapping_genes(SG_subtypes)
-    
+
     SG_subtypes = _remove_genes_w_too_high_expr(adata, SG_subtypes, config.ctrl_size)
-    
-    for k,v in SG_subtypes.items():
+
+    for k, v in SG_subtypes.items():
         print(f'Signature for subtype {k} contains {len(v)} genes.')
-    
+
     return SG_subtypes
 
 
@@ -434,7 +436,7 @@ def main(config):
         if any([y in SC_NAMES or y == "Jasmine" for y in x.split("_")])
     ]
     scoring_names = sorted(scoring_names)
-    
+
     print('### save adata if demanded ')
     if config.save_adata:
         adata.write_h5ad(
@@ -455,10 +457,10 @@ def main(config):
         sc_method_name = scoring_names[i].rsplit("_", 1)[0]
         sc.logging.info(f"Evaluate performances for {sc_method_name}")
 
-        curr_sc_names = scoring_names[i : (i + config.nr_sigs)]
-        
+        curr_sc_names = scoring_names[i: (i + config.nr_sigs)]
+
         X = adata.obs[curr_sc_names].values
-        y = adata.obs["celltype.l2"].values if config.dataset == 'pbmc_b_subtypes' else adata.obs["celltype.l1"].values 
+        y = adata.obs["celltype.l2"].values if config.dataset == 'pbmc_b_subtypes' else adata.obs["celltype.l1"].values
         print("> Estimate performance with (supervised) LogReg")
         f1_logreg, balacc_logreg, jac_logreg = _estimate_with_log_reg(X, y)
         print("> Get hard labeling performance")

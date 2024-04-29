@@ -5,7 +5,7 @@ import scanpy as sc
 
 sys.path.append('..')
 sys.path.append('../..')
-from data.load_data import load_dgex_genes_for_mal_cells
+from ..data.load_data import load_dgex_genes_for_mal_cells
 
 
 def get_scoring_method_params(sc_method_name):

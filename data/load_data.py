@@ -6,7 +6,7 @@ import scanpy as sc
 sys.path.append('..')
 sys.path.append('.')
 
-from data.constants import (
+from .constants import (
     BASE_PATH_RAW_CANCER,
     BASE_PATH_RAW_PBMC,
     BASE_PATH_PREPROCESSED,
@@ -62,12 +62,19 @@ def load_datasets(dataset_name, preprocessed=True, norm_method='mean', sample_ba
 
     if dataset_name == 'pbmc_b_mono_nk':
         fn = os.path.join(BASE_PATH_PREPROCESSED,
-                          f'pp_pbmc_b_mono_nk{appendix}.h5ad') if preprocessed else os.path.join(BASE_PATH_RAW_PBMC,
-                                                                                                 'pbmc_citeseq.h5ad')
+                          f'pp_pbmc_b_mono_nk{appendix}.h5ad') if preprocessed else BASE_PATH_RAW_PBMC
     elif dataset_name == 'pbmc_b_subtypes':
         fn = os.path.join(BASE_PATH_PREPROCESSED,
-                          f'pp_pbmc_b_subtypes{appendix}.h5ad') if preprocessed else os.path.join(BASE_PATH_RAW_PBMC,
-                                                                                                  'pbmc_citeseq.h5ad')
+                          f'pp_pbmc_b_subtypes{appendix}.h5ad') if preprocessed else BASE_PATH_RAW_PBMC
+    elif dataset_name == 'pbmc_cd4_subtypes':
+        fn = os.path.join(BASE_PATH_PREPROCESSED,
+                          f'pp_pbmc_cd4_subtypes{appendix}.h5ad') if preprocessed else BASE_PATH_RAW_PBMC
+    elif dataset_name == 'pbmc_cd8_subtypes':
+        fn = os.path.join(BASE_PATH_PREPROCESSED,
+                          f'pp_pbmc_cd8_subtypes{appendix}.h5ad') if preprocessed else BASE_PATH_RAW_PBMC
+    elif dataset_name == 'pbmc':
+        assert not preprocessed, 'No preprocessed version available for pbmc dataset.'
+        fn = BASE_PATH_RAW_PBMC
     else:
         fn = os.path.join(BASE_PATH_PREPROCESSED,
                           f'pp_{dataset_name}{appendix}.h5ad') if preprocessed else os.path.join(BASE_PATH_RAW_CANCER,

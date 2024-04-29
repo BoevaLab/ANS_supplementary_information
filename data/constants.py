@@ -2,7 +2,7 @@
 ####################################################################################
 ### PATHS
 ## !!!!!! TODO: CHANGE path to folder where data and experiments should go !!!!!!!
-BASE_PATH_DRIVE = '.....'
+BASE_PATH_DRIVE = '/Users/lciernik/Documents/TUB/projects/ans_scoring'
 
 BASE_PATH_EXPERIMENTS = BASE_PATH_DRIVE + '/experiments'
 BASE_PATH_DATA = BASE_PATH_DRIVE + '/data'
@@ -51,8 +51,8 @@ BASE_PATH_DGEX_CANCER = BASE_PATH_DATA +'/dgex_genes'
 # Dissecting the multicellular ecosystem of metastatic melanoma by single-cell RNA-seq. Science.
 # 2016 Apr 8;352(6282):189-96. doi: 10.1126/science.aad0501. PMID: 27124452; PMCID: PMC4944528.
 
-DATASETS = ['crc', 'escc', 'luad_xing', 'breast_large', 'breast_small', 'melanoma', 'pbmc_b_mono_nk', 'pbmc_b_subtypes']
-CANCER_DATASETS = DATASETS[0:-2]
+DATASETS = ['crc', 'escc', 'luad_xing', 'breast_large', 'breast_small', 'melanoma', 'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes', 'pbmc']
+CANCER_DATASETS = DATASETS[0:-4]
 
 ####################################################################################
 # AVAILABLE NORMALIZATION METHODS

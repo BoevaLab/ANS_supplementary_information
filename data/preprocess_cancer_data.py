@@ -11,8 +11,8 @@ import scanpy as sc
 from scipy.sparse import diags
 
 sys.path.append('..')
-from experiments.experiment_utils import AttributeDict
-from constants import DATASETS, NORM_METHODS, BASE_PATH_RAW_CANCER, BASE_PATH_PREPROCESSED
+from ..experiments.experiment_utils import AttributeDict
+from .constants import DATASETS, NORM_METHODS, BASE_PATH_RAW_CANCER, BASE_PATH_PREPROCESSED
 
 sc.settings.verbosity = 2  # verbosity: errors (0), warnings (1), info (2), hints (3)
 
