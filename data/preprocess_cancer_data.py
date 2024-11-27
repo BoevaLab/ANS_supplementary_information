@@ -11,8 +11,8 @@ import scanpy as sc
 from scipy.sparse import diags
 
 sys.path.append('..')
-from ..experiments.experiment_utils import AttributeDict
-from .constants import DATASETS, NORM_METHODS, BASE_PATH_RAW_CANCER, BASE_PATH_PREPROCESSED
+from experiments.experiment_utils import AttributeDict
+from constants import DATASETS, NORM_METHODS, BASE_PATH_RAW_CANCER, BASE_PATH_CANSIG_PP_CANCER, BASE_PATH_PREPROCESSED
 
 sc.settings.verbosity = 2  # verbosity: errors (0), warnings (1), info (2), hints (3)
 
@@ -49,7 +49,7 @@ def filtergenes(adata, pct=0.01):
 
 def preprocess_data(adata, filter_genes=True, shift_method='mean'):
     if filter_genes:
-        # Since we removed cells we need to refilter the genes, as they are filtered based on the
+        # Since we might have removed cells we need to refilter the genes, as they are filtered based on the
         # percentage of available cells in the data
         adata = filtergenes(adata)
 
@@ -97,8 +97,9 @@ def preprocess_dataset(adata, filter_genes=True, shift_method='mean', sample_bas
     # sc.logging.info input configuration
     sc.logging.info(f'filter_genes={filter_genes}, shift_method={shift_method}, sample_based={sample_based}')
     # remove cells that were undecided in malignancy from CanSig pipeline
-    adata = adata[adata.obs.malignant_key != 'undecided', :].copy()
-    adata.obs.malignant_key = adata.obs.malignant_key.astype('category')
+    if 'malignant_key' in adata.obs:
+        adata = adata[adata.obs.malignant_key != 'undecided', :].copy()
+        adata.obs.malignant_key = adata.obs.malignant_key.astype('category')
 
     adata.layers["counts"] = adata.X
 
@@ -135,7 +136,10 @@ def get_appendix(normalization_method, pp_sample_based):
 
 def main(config):
     appendix = get_appendix(config.norm_method, config.sample_based)
-    fn_data = os.path.join(BASE_PATH_RAW_CANCER, f'{config.dataset}.h5ad')
+    if config.dataset in ['ovarian_malignant', 'skin_malignant']:
+        fn_data = os.path.join(BASE_PATH_RAW_CANCER, f'{config.dataset}.h5ad')
+    else:
+        fn_data = os.path.join(BASE_PATH_CANSIG_PP_CANCER, f'{config.dataset}.h5ad')
     fn_output = os.path.join(BASE_PATH_PREPROCESSED, f'pp_{config.dataset}{appendix}.h5ad')
 
     adata = sc.read_h5ad(fn_data)

@@ -136,6 +136,7 @@ def preprocess_dataset(
     filter_cells=True,
     filter_genes=True,
     shift_method="mean",
+    sample_col="orig.ident",
     params_cell_filtering={},
     show=False,
 ):
@@ -152,7 +153,7 @@ def preprocess_dataset(
 
     # FILTER CELLS
     if filter_cells:
-        adata = filtercells(adata, params_cell_filtering=params_cell_filtering)
+        adata = filtercells(adata, sample_col=sample_col, params_cell_filtering=params_cell_filtering)
     
     if show:
         # CREATE PLOT

@@ -9,7 +9,7 @@ NORM_METHOD='mean'
 # for dataset in 'luad_xing' 'luad_atlas' 'melanoma'; do
 for dataset in 'luad_xing'; do
     echo "STARTING extraction malignant signature for $dataset with norm_method=$NORM_METHOD."
-    python DGEX_non_rel_genes_with_pseudobulk_and_deseq2.py --dataset "$dataset" --norm_method "$NORM_METHOD"
+    python ../DGEX_non_rel_genes_with_pseudobulk_and_deseq2.py --dataset "$dataset" --norm_method "$NORM_METHOD"
     echo "FINISHED experiment."
     echo ""
 done
