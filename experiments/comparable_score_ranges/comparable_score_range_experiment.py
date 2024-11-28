@@ -4,7 +4,7 @@ import sys
 import warnings
 from collections import defaultdict
 from pathlib import Path
-
+from dataclasses import asdict
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
@@ -19,10 +19,10 @@ from signaturescoring.scoring_methods.gmm_postprocessing import GMMPostprocessor
 sys.path.append('../..')
 
 from ANS_supplementary_information.data.constants import (DATASETS_WITH_ANNOTATIONS, BASE_PATH_RESULTS, SCORING_METHODS,
-                                                          METHOD_WITH_GENE_POOL)
+                                                          METHOD_WITH_GENE_POOL, VIOLIN_PLOT_CONFIG)
 from ANS_supplementary_information.data.load_data import load_datasets, load_signatures
 
-from helper_methods import get_violin_all_methods
+from helper_methods import get_violin_all_methods, prepare_data_for_violin_plot
 
 
 def get_storing_path(base_storing_path, dataset, remove_overlapping_genes, verbose=False):
@@ -248,8 +248,29 @@ def main(args):
 
     # Create plots
     ## Umap plots
+
     ## Violin plots
+    df_melted = prepare_data_for_violin_plot(adata, args.gt_annotation_col, score_cols)
+    fig = get_violin_all_methods(df_melted,
+                                 args.gt_annotation_col,
+                                 hue_order=signature_order,
+                                 **asdict(VIOLIN_PLOT_CONFIG[args.dataset])
+                                 )
+    fig.savefig(storing_path / "violin_all_methods.pdf", bbox_inches='tight')
+    fig.savefig(storing_path / "violin_all_methods.svg", bbox_inches='tight')
+    if args.verbose:
+        print(f"""Saved violin plot to {storing_path / "violin_all_methods.pdf"}""")
+
     ## Confusion matrices
+    for key, val in metrics.items():
+        conf_mat = val['conf_mat']
+        fig = plot_confusion_matrix(conf_mat, order_signatures, method_name, figsize=(4, 4), textwrap_width=7,
+                                    xrotation=45, cbar=False)
+        fig.savefig(storing_path / f"confusion_matrix_{key}.pdf", bbox_inches='tight')
+        fig.savefig(storing_path / f"confusion_matrix_{key}.svg", bbox_inches='tight')
+        if args.verbose:
+            print(f"""Saved confusion matrix to {storing_path / f"confusion_matrix_{key}.pdf"}""")
+
 
 
 if __name__ == "__main__":

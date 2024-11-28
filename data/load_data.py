@@ -7,10 +7,12 @@ import decoupler as dc
 import pandas as pd
 import scanpy as sc
 
+from ANS_supplementary_information.data.constants import BASE_PATH_CANSIG_PP_CANCER
+
 sys.path.append('..')
 sys.path.append('.')
 
-from .constants import (
+from constants import (
     # Paths
     BASE_PATH_RAW_CANCER,
     BASE_PATH_RAW_PBMC,
@@ -69,7 +71,7 @@ def get_fn_dge(norm_method, sample_based, dge_on_all, intersect_pct, min_log2fc,
     return fn
 
 
-def load_datasets(dataset_name, preprocessed=True, norm_method='mean', sample_based=False):
+def load_datasets(dataset_name, preprocessed=True, cansig_pp=True, norm_method='mean', sample_based=False):
     assert dataset_name in DATASETS, f'Unknown dataset_name {dataset_name}. Allowed datasets {DATASETS}.'
 
     if preprocessed:
@@ -81,9 +83,13 @@ def load_datasets(dataset_name, preprocessed=True, norm_method='mean', sample_ba
         fn = os.path.join(BASE_PATH_PREPROCESSED,
                           f'pp_{dataset_name}{appendix}.h5ad') if preprocessed else BASE_PATH_RAW_PBMC
     elif dataset_name in CANCER_DATASETS:
-        fn = os.path.join(BASE_PATH_PREPROCESSED,
-                          f'pp_{dataset_name}{appendix}.h5ad') if preprocessed else os.path.join(BASE_PATH_RAW_CANCER,
-                                                                                                 f'{dataset_name}.h5ad')
+        if preprocessed:
+            fn = os.path.join(BASE_PATH_PREPROCESSED, f'pp_{dataset_name}{appendix}.h5ad')
+        else:
+            if cansig_pp:
+                fn = os.path.join(BASE_PATH_CANSIG_PP_CANCER, f'{dataset_name}.h5ad')
+            else:
+                fn = os.path.join(BASE_PATH_RAW_CANCER, f'{dataset_name}.h5ad')
     else:
         raise KeyError(f'Unknown dataset_name {dataset_name}. Allowed datasets {DATASETS}.')
 

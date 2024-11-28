@@ -1,8 +1,63 @@
 import textwrap
 
 import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import seaborn as sns
+
+
+def plot_confusion_matrix(
+        conf_mat,
+        label_names,
+        method_name,
+        figsize=(6, 5),
+        textwrap_width=8,
+        xrotation=45,
+        cbar=False,
+        vmin=None,
+        vmax=None,
+        fontsizes={'title': 12, 'labels': 11, 'ticks': 11, 'legend': 11}
+
+):
+    fig = plt.figure(figsize=figsize)
+
+    g = sns.heatmap(
+        conf_mat * 100,
+        annot=True,
+        fmt=".2f",
+        cmap='coolwarm',
+        annot_kws={"fontsize": 9},
+        cbar=cbar,
+        vmin=vmin,
+        vmax=vmax
+    )
+
+    new_labels = [textwrap.fill(label, width=textwrap_width) for label in label_names]
+
+    g.set_title(f'{method_name}', fontsize=fontsizes['title'])
+    g.set_ylabel('True', fontsize=fontsizes['labels'])
+    g.set_xlabel('Predicted', fontsize=fontsizes['labels'])
+    g.set_xticklabels(new_labels, rotation=xrotation, fontsize=fontsizes['ticks'])
+    g.set_yticklabels(new_labels, rotation=0, fontsize=fontsizes['ticks'])
+    g.tick_params(axis='x', labelsize=fontsizes['ticks'], width=0.85)
+    g.tick_params(axis='y', labelsize=fontsizes['ticks'], width=0.85)
+    return fig
+
+
+def prepare_data_for_violin_plot(adata, y_true_col, score_cols):
+    tmp = adata.obs.copy()
+    tmp = tmp.reset_index(names=['old_index'])
+    dfs = []
+    for method_name, method_scores in score_cols.items():
+        new_col_names = [x.split("_" + method_name + "_")[0].replace('_', ' ') for x in method_scores]
+        df = tmp.loc[:, [y_true_col] + method_scores].copy()
+        df.columns = [y_true_col] + new_col_names
+        df['Scoring method'] = method_name
+        dfs.append(df)
+    df = pd.concat(dfs, ignore_index=True).reset_index(drop=True)
+    df_melted = df.melt(id_vars=[y_true_col, 'Scoring method'], var_name='Signature', value_name='Scores')
+    return df_melted
 
 
 def get_violin_all_methods(
@@ -15,7 +70,7 @@ def get_violin_all_methods(
         sharey=False,
         wspace=0.05,
         legend_bbox_anchor=(1.15, 1),
-        fontsizes=dict(title=12, labels=11, ticks=9, legend=11),
+        fontsizes=dict(title=12, labels=11, ticks=11, legend=11),
 ):
     sns.set_style("ticks")
     g = sns.catplot(

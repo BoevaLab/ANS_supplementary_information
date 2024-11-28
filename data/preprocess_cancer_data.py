@@ -136,7 +136,7 @@ def get_appendix(normalization_method, pp_sample_based):
 
 def main(config):
     appendix = get_appendix(config.norm_method, config.sample_based)
-    if config.dataset in ['ovarian_malignant', 'skin_malignant']:
+    if config.dataset in ['ovarian_malignant', 'skin_malignant', 'skin_malignant_2']:
         fn_data = os.path.join(BASE_PATH_RAW_CANCER, f'{config.dataset}.h5ad')
     else:
         fn_data = os.path.join(BASE_PATH_CANSIG_PP_CANCER, f'{config.dataset}.h5ad')

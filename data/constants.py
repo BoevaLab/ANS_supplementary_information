@@ -2,7 +2,7 @@
 ####################################################################################
 ### PATHS
 ## !!!!!! TODO: CHANGE path to folder where data and experiments should go !!!!!!!
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 BASE_PATH_DRIVE = '/Users/lciernik/Documents/TUB/projects/ans_scoring'
 
@@ -82,8 +82,8 @@ from dataclasses import dataclass
 
 DATASETS = [
     'crc', 'escc', 'luad_xing', 'breast', 'breast_large', 'breast_small', 'breast_malignant',
-    'melanoma', 'luad_kim_malignant', 'skin_malignant', 'ovarian_malignant',
-    'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes', 'pbmc'
+    'melanoma', 'luad_kim_malignant', 'luad_kim_malignant_2', 'skin_malignant', 'skin_malignant_2',
+    'ovarian_malignant', 'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes', 'pbmc'
 ]
 
 CANCER_DATASETS = DATASETS[0:-5]
@@ -110,7 +110,15 @@ CANCER_DATASET_SIGS_CONFIGS = {
     'luad_kim_malignant': CancerSignatureConfig(
         file_path='luad_kim/kim_3.csv'
     ),
+    'luad_kim_malignant_2': CancerSignatureConfig(
+        file_path='luad_kim/kim_3.csv'
+    ),
     'skin_malignant': CancerSignatureConfig(
+        file_path='skin_ji/gene_sets.gmt',
+        file_type='gmt',
+        name_transform=lambda k: k.replace('_', ' ')
+    ),
+    'skin_malignant_2': CancerSignatureConfig(
         file_path='skin_ji/gene_sets.gmt',
         file_type='gmt',
         name_transform=lambda k: k.replace('_', ' ')
@@ -163,6 +171,78 @@ PBMC_DATASET_SIGS_CONFIGS = {
                         'CD8 TEM_5', 'CD8 TEM_6', 'CD8 TEM_3'],
         }),
 }
+
+
+@dataclass
+class ViolinPlotConfig:
+    """Configuration for signature file loading."""
+    textwrap_width: int = 8
+    height: float = 1.95
+    aspect: float = 0.925
+    sharey: bool = False
+    wspace: float = 0.05
+    col_wrap: int = 4
+    legend_bbox_anchor: Tuple[float, float] = (1.15, 1)
+    fontsizes: Dict[str, int] = None
+
+    def __post_init__(self):
+        if self.fontsizes is None:
+            self.fontsizes = {'title': 12, 'labels': 11, 'ticks': 11, 'legend': 11}
+
+
+VIOLIN_PLOT_CONFIG = {
+    'breast_malignant': ViolinPlotConfig(
+        aspect=2,
+        wspace=0.075,
+        legend_bbox_anchor=(1.075, 1),
+    ),
+    'luad_kim_malignant': ViolinPlotConfig(
+        aspect=1.75,
+        wspace=0.15,
+        legend_bbox_anchor=(1.13, 1),
+    ),
+    'skin_malignant': ViolinPlotConfig(
+        textwrap_width=9,
+        aspect=1.75,
+        wspace=0.15,
+        legend_bbox_anchor=(1.025, 1),
+        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
+    ),
+    'ovarian_malignant': None,
+    'pbmc_b_mono_nk': None,
+    'pbmc_b_subtypes': None,
+    'pbmc_cd4_subtypes': None,
+    'pbmc_cd8_subtypes': None,
+}
+
+#
+# @dataclass
+# class HeatmapConfig:
+#     """Configuration for signature file loading."""
+#     figsize: Tuple[float, float] = (6, 5)
+#     textwrap_width: int = 8
+#     xrotation: int = 0
+#     cbar: bool = False
+#     vmin: Optional[float] = None
+#     vmax: Optional[float] = None
+#     fontsizes: Dict[str, int] = None
+#
+#     def __post_init__(self):
+#         if self.fontsizes is None:
+#             self.fontsizes = {'title': 12, 'labels': 11, 'ticks': 11, 'legend': 11}
+#
+# HEATMAP_PLOT_CONFIG = {
+#     'breast_malignant': HeatmapConfig(
+#         figsize=(3,3),
+#         textwrap_width=7,
+#     ),
+#     'luad_kim_malignant': HeatmapConfig(
+#         figsize=(2.5, 2.5),
+#         textwrap_width=7,
+#     ),
+#
+#
+# }
 
 ####################################################################################
 # AVAILABLE NORMALIZATION METHODS
