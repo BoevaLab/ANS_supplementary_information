@@ -1,5 +1,4 @@
 import os
-import sys
 from pathlib import Path
 from typing import Dict, List
 
@@ -7,18 +6,14 @@ import decoupler as dc
 import pandas as pd
 import scanpy as sc
 
-from ANS_supplementary_information.data.constants import BASE_PATH_CANSIG_PP_CANCER
-
-sys.path.append('..')
-sys.path.append('.')
-
-from constants import (
+from .constants import (
     # Paths
     BASE_PATH_RAW_CANCER,
     BASE_PATH_RAW_PBMC,
     BASE_PATH_PREPROCESSED,
     BASE_PATH_DGEX_CANCER,
     BASE_PATH_ANNOT_CANCER,
+    BASE_PATH_CANSIG_PP_CANCER,
     PBMC_DEXG,
 
     # Dataset definitions

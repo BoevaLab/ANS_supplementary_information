@@ -11,15 +11,16 @@ def plot_confusion_matrix(
         conf_mat,
         label_names,
         method_name,
-        figsize=(6, 5),
-        textwrap_width=8,
-        xrotation=45,
+        base_size=0.9,
+        textwrap_width=7,
+        xrotation=0,
         cbar=False,
         vmin=None,
         vmax=None,
-        fontsizes={'title': 12, 'labels': 11, 'ticks': 11, 'legend': 11}
+        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
 
 ):
+    figsize = (base_size * len(label_names), base_size * len(label_names))
     fig = plt.figure(figsize=figsize)
 
     g = sns.heatmap(
@@ -27,7 +28,7 @@ def plot_confusion_matrix(
         annot=True,
         fmt=".2f",
         cmap='coolwarm',
-        annot_kws={"fontsize": 9},
+        annot_kws={"fontsize": fontsizes['labels']},
         cbar=cbar,
         vmin=vmin,
         vmax=vmax
@@ -69,6 +70,7 @@ def get_violin_all_methods(
         textwrap_width=8,
         sharey=False,
         wspace=0.05,
+        col_wrap=4,
         legend_bbox_anchor=(1.15, 1),
         fontsizes=dict(title=12, labels=11, ticks=11, legend=11),
 ):
@@ -82,7 +84,7 @@ def get_violin_all_methods(
         hue_order=hue_order,
         kind="violin",
         col='Scoring method',
-        col_wrap=4,
+        col_wrap=col_wrap,
         height=height,
         aspect=aspect,
         density_norm='width',

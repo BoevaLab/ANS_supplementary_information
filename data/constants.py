@@ -192,57 +192,62 @@ class ViolinPlotConfig:
 
 VIOLIN_PLOT_CONFIG = {
     'breast_malignant': ViolinPlotConfig(
-        aspect=2,
+        aspect=2.5,
         wspace=0.075,
-        legend_bbox_anchor=(1.075, 1),
+        col_wrap=2,
+        legend_bbox_anchor=(1.125, 1),
     ),
     'luad_kim_malignant': ViolinPlotConfig(
-        aspect=1.75,
+        aspect=1.15,
         wspace=0.15,
         legend_bbox_anchor=(1.13, 1),
     ),
     'skin_malignant': ViolinPlotConfig(
         textwrap_width=9,
-        aspect=1.75,
-        wspace=0.15,
-        legend_bbox_anchor=(1.025, 1),
+        aspect=1.85,
+        wspace=0.1,
+        legend_bbox_anchor=(1.05, 1),
+        col_wrap=2,
         fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
     ),
-    'ovarian_malignant': None,
-    'pbmc_b_mono_nk': None,
-    'pbmc_b_subtypes': None,
-    'pbmc_cd4_subtypes': None,
-    'pbmc_cd8_subtypes': None,
+    'ovarian_malignant': ViolinPlotConfig(
+        textwrap_width=7,
+        height=2,
+        aspect=3,
+        legend_bbox_anchor=(1, 1),
+        col_wrap=2,
+        fontsizes={'title': 12, 'labels': 10, 'ticks': 10, 'legend': 10}
+    ),
+    'pbmc_b_mono_nk': ViolinPlotConfig(
+        textwrap_width=7,
+        sharey=True,
+        aspect=1.05,
+        legend_bbox_anchor=(1.125, 1),
+        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
+    ),
+    'pbmc_b_subtypes': ViolinPlotConfig(
+        textwrap_width=7,
+        sharey=True,
+        aspect=1.05,
+        legend_bbox_anchor=(1.075, 1),
+        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
+    ),
+    'pbmc_cd4_subtypes': ViolinPlotConfig(
+        textwrap_width=6,
+        height=2.5,
+        aspect=1.75,
+        col_wrap=2,
+        wspace=0.075,
+        legend_bbox_anchor=(1.05, 1),
+    ),
+    'pbmc_cd8_subtypes': ViolinPlotConfig(
+        textwrap_width=5,
+        col_wrap=2,
+        aspect=1.5,
+        wspace=0.2,
+        legend_bbox_anchor=(1.05, 1),
+    ),
 }
-
-#
-# @dataclass
-# class HeatmapConfig:
-#     """Configuration for signature file loading."""
-#     figsize: Tuple[float, float] = (6, 5)
-#     textwrap_width: int = 8
-#     xrotation: int = 0
-#     cbar: bool = False
-#     vmin: Optional[float] = None
-#     vmax: Optional[float] = None
-#     fontsizes: Dict[str, int] = None
-#
-#     def __post_init__(self):
-#         if self.fontsizes is None:
-#             self.fontsizes = {'title': 12, 'labels': 11, 'ticks': 11, 'legend': 11}
-#
-# HEATMAP_PLOT_CONFIG = {
-#     'breast_malignant': HeatmapConfig(
-#         figsize=(3,3),
-#         textwrap_width=7,
-#     ),
-#     'luad_kim_malignant': HeatmapConfig(
-#         figsize=(2.5, 2.5),
-#         textwrap_width=7,
-#     ),
-#
-#
-# }
 
 ####################################################################################
 # AVAILABLE NORMALIZATION METHODS

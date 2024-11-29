@@ -75,13 +75,13 @@ def plot_confusion_matrix(
         label_names,
         method_name,
         # figsize=(6, 5),
-        base_size=0.8,
-        textwrap_width=8,
+        base_size=0.9,
+        textwrap_width=7,
         xrotation=0,
         cbar=False,
         vmin=None,
         vmax=None,
-        fontsizes={'title': 12, 'labels': 11, 'ticks': 11, 'legend': 11}
+        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
 
 ):
     figsize = (base_size * len(label_names), base_size * len(label_names))
@@ -116,7 +116,7 @@ def get_information_from_scores(adata, y_true_col, scores, nfold=10, metric='bal
 
     model = Pipeline([
         ('scaler', StandardScaler()),
-        ('logreg', LogisticRegression(max_iter=max_iter))
+        ('logreg', LogisticRegression(max_iter=max_iter, penalty=None))
     ])
 
     cv = StratifiedKFold(n_splits=nfold)
