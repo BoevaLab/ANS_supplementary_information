@@ -3,10 +3,12 @@ import os
 import sys
 import warnings
 from collections import defaultdict
-from pathlib import Path
 from dataclasses import asdict
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+import scanpy as sc
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, balanced_accuracy_score, f1_score, jaccard_score
 from sklearn.model_selection import StratifiedKFold, cross_val_score
@@ -16,13 +18,13 @@ from sklearn.preprocessing import StandardScaler
 import signaturescoring as ssc
 from signaturescoring.scoring_methods.gmm_postprocessing import GMMPostprocessor
 
-sys.path.append('../..')
+sys.path.append('../../data')
 
-from ANS_supplementary_information.data.constants import (DATASETS_WITH_ANNOTATIONS, BASE_PATH_RESULTS, SCORING_METHODS,
-                                                          METHOD_WITH_GENE_POOL, VIOLIN_PLOT_CONFIG)
-from ANS_supplementary_information.data.load_data import load_datasets, load_signatures
+from constants import (DATASETS_WITH_ANNOTATIONS, BASE_PATH_RESULTS, SCORING_METHODS,
+                       METHOD_WITH_GENE_POOL, VIOLIN_PLOT_CONFIG)
+from load_data import load_datasets, load_signatures
 
-from helper_methods import get_violin_all_methods, prepare_data_for_violin_plot
+from helper_methods import get_violin_all_methods, prepare_data_for_violin_plot, plot_confusion_matrix
 
 
 def get_storing_path(base_storing_path, dataset, remove_overlapping_genes, verbose=False):
@@ -245,9 +247,12 @@ def main(args):
         if args.verbose:
             print(f"""Saved adata to {storing_path / 'adata.h5ad'}""")
 
-
     # Create plots
     ## Umap plots
+    fig = sc.pl.umap(adata, color=all_cols + [args.sample_col, args.gt_annotation_col],
+                     ncols=len(signatures) + 1, return_fig=True)
+    fig.savefig(storing_path / "umap_scores.pdf", bbox_inches='tight')
+    fig.savefig(storing_path / "umap_scores.svg", bbox_inches='tight')
 
     ## Violin plots
     df_melted = prepare_data_for_violin_plot(adata, args.gt_annotation_col, score_cols)
@@ -264,19 +269,18 @@ def main(args):
     ## Confusion matrices
     for key, val in metrics.items():
         conf_mat = val['conf_mat']
-        fig = plot_confusion_matrix(conf_mat, order_signatures, method_name, figsize=(4, 4), textwrap_width=7,
-                                    xrotation=45, cbar=False)
+        fig = plot_confusion_matrix(conf_mat, signature_order, key)
         fig.savefig(storing_path / f"confusion_matrix_{key}.pdf", bbox_inches='tight')
         fig.savefig(storing_path / f"confusion_matrix_{key}.svg", bbox_inches='tight')
         if args.verbose:
             print(f"""Saved confusion matrix to {storing_path / f"confusion_matrix_{key}.pdf"}""")
 
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run comparable score range experiment.")
 
     parser.add_argument("--dataset", type=str, choices=DATASETS_WITH_ANNOTATIONS)
+    parser.add_argument("--sample_col", type=str, help="Patient/sample column.")
     parser.add_argument("--gt_annotation_col", type=str, help="Ground truth annotation column.")
     parser.add_argument("--remove_overlapping_genes", action="store_true")
     parser.add_argument("--use_gene_pool", action="store_true",
