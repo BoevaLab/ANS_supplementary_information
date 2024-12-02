@@ -27,10 +27,17 @@ from load_data import load_datasets, load_signatures
 from helper_methods import get_violin_all_methods, prepare_data_for_violin_plot, plot_confusion_matrix
 
 
-def get_storing_path(base_storing_path, dataset, remove_overlapping_genes, verbose=False):
+def get_storing_path(base_storing_path, dataset, remove_overlapping_genes, use_gene_pool, verbose=False):
     storing_path = Path(base_storing_path) / dataset
-    storing_path = storing_path / (
-        'without_overlapping_genes' if remove_overlapping_genes else 'with_overlapping_genes')
+    if use_gene_pool:
+        storing_path = storing_path / 'with_gene_pool'
+    else:
+        storing_path = storing_path / 'without_gene_pool'
+
+    if remove_overlapping_genes:
+        storing_path = storing_path / 'without_overlapping_genes'
+    else:
+        storing_path = storing_path / 'with_overlapping_genes'
 
     if not storing_path.exists():
         storing_path.mkdir(parents=True)
@@ -118,12 +125,14 @@ def get_lbl_assignment_performance(adata, y_true_col, y_pred_col, label_names, a
     return conf_mat, bal_acc, f1_val, jacc_score
 
 
-def get_gmm_perf(adata, y_true_col, score_cols, K=3, avg='weighted'):
+def get_gmm_perf(adata, method_name, y_true_col, score_cols, K=3, avg='weighted', verbose=False):
     gmm_post = GMMPostprocessor(n_components=K)
 
     store_name_pred, store_names_proba, _ = gmm_post.fit_and_predict(adata, score_cols)
 
     assignments = gmm_post.assign_clusters_to_signatures(adata, score_cols, store_names_proba, plot=False)
+    if verbose:
+        print("GMM score mapping: ", assignments)
 
     gmm_cols = []
     for key, val in assignments.items():
@@ -137,7 +146,8 @@ def get_gmm_perf(adata, y_true_col, score_cols, K=3, avg='weighted'):
 
     y = adata.obs[y_true_col].values
     y_pred = adata.obs[gmm_cols].idxmax(axis=1)
-    y_pred = (y_pred.apply(lambda x: x.rsplit("_", 2)[1])).values
+    y_pred = y_pred.apply(lambda x: x.split(f'_{method_name}_')[0])
+    y_pred = y_pred.apply(lambda x: x.replace('_', ' '))
 
     return (
         f1_score(y, y_pred, average=avg),
@@ -178,7 +188,8 @@ def get_all_performances(score_cols, label_cols, adata, y_true_col, signature_or
                                                                                label_names=signature_order)
 
         # GMM
-        f1_gmm, bal_acc_gmm, jacc_score_gmm = get_gmm_perf(adata, y_true_col, method_scores, K=len(method_scores))
+        f1_gmm, bal_acc_gmm, jacc_score_gmm = get_gmm_perf(adata, method_name, y_true_col, method_scores,
+                                                           K=len(method_scores))
 
         method_metrics.update({
             'conf_mat': conf_mat,
@@ -207,6 +218,7 @@ def main(args):
         args.base_storing_path,
         args.dataset,
         args.remove_overlapping_genes,
+        args.use_gene_pool,
         args.verbose
     )
 
@@ -219,6 +231,16 @@ def main(args):
     if args.gt_annotation_col not in adata.obs.columns:
         raise KeyError(
             f'Ground truth annotation column {args.gt_annotation_col} not in adata columns {adata.obs.columns}')
+    if args.dataset == 'breast_malignant':
+        adata.obs[args.gt_annotation_col] = adata.obs[args.gt_annotation_col].map(
+            {str(i): f'GM{i}' for i in range(1, 8)})
+    elif args.dataset.startswith('skin_malignant'):
+        y_true_col = args.gt_annotation_col
+        adata.obs[y_true_col] = adata.obs[y_true_col].astype(str)
+        adata.obs.loc[adata.obs[y_true_col] == 'Tumor_KC_Cyc', y_true_col] = 'Tumor KC Cycling'
+        adata.obs[y_true_col] = adata.obs[y_true_col].astype('category')
+        adata.obs[y_true_col] = adata.obs[y_true_col].map(
+            {val: val.replace('_', ' ') for val in adata.obs[y_true_col].unique()})
 
     # Load signatures
     signatures = load_signatures(args.dataset, args.remove_overlapping_genes)
@@ -249,10 +271,10 @@ def main(args):
 
     # Create plots
     ## Umap plots
-    fig = sc.pl.umap(adata, color=all_cols + [args.sample_col, args.gt_annotation_col],
-                     ncols=len(signatures) + 1, return_fig=True)
-    fig.savefig(storing_path / "umap_scores.pdf", bbox_inches='tight')
-    fig.savefig(storing_path / "umap_scores.svg", bbox_inches='tight')
+    # fig = sc.pl.umap(adata, color=all_cols + [args.sample_col, args.gt_annotation_col],
+    #                  ncols=len(signatures) + 1, return_fig=True)
+    # fig.savefig(storing_path / "umap_scores.pdf", bbox_inches='tight')
+    # fig.savefig(storing_path / "umap_scores.svg", bbox_inches='tight')
 
     ## Violin plots
     df_melted = prepare_data_for_violin_plot(adata, args.gt_annotation_col, score_cols)
@@ -290,9 +312,10 @@ if __name__ == "__main__":
                         help="Figures and data only stored at storing path it flag is set.")
     parser.add_argument("--base_storing_path", default=os.path.join(BASE_PATH_RESULTS, "comparable_score_ranges"),
                         help="Path where to store the results.")
-    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing files.")
     parser.add_argument("--verbose", action="store_true", help="Print additional information.")
 
     args = parser.parse_args()
+
+    print(args)
 
     main(args)

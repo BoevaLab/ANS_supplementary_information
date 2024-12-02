@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from typing import Dict, List
 
@@ -6,7 +7,9 @@ import decoupler as dc
 import pandas as pd
 import scanpy as sc
 
-from .constants import (
+sys.path.append('.')
+
+from constants import (
     # Paths
     BASE_PATH_RAW_CANCER,
     BASE_PATH_RAW_PBMC,

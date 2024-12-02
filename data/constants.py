@@ -90,8 +90,8 @@ CANCER_DATASETS = DATASETS[0:-5]
 PBMC_DATASETS = DATASETS[-5:]
 
 DATASETS_WITH_ANNOTATIONS = [
-    'breast_malignant', 'luad_kim_malignant', 'skin_malignant', 'ovarian_malignant',
-    'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes',
+    'breast_malignant', 'luad_kim_malignant', 'luad_kim_malignant_2', 'skin_malignant', 'skin_malignant_2',
+    'ovarian_malignant', 'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes',
 ]
 
 
