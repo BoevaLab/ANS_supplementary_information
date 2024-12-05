@@ -1,6 +1,6 @@
 import argparse
+import json
 import os
-import pickle
 import sys
 import warnings
 from collections import defaultdict
@@ -250,9 +250,9 @@ def main(args):
             print(cell_type, ' with signature length: ', len(genes))
     if args.save_signatures:
         try:
-            fn = storing_path / f'{args.dataset}_signautres.csv'
-            with open(fn, 'wb') as f:
-                pickle.dump(signatures, f)
+            fn = storing_path / f'{args.dataset}_signautres.json'
+            with open(fn, 'w') as f:
+                json.dump(signatures, f, indent=4)
             print(f"Dictionary successfully saved to {fn}")
         except Exception as e:
             print(f"Error saving dictionary: {e}")
