@@ -1,5 +1,6 @@
 import argparse
 import os
+import pickle
 import sys
 import warnings
 from collections import defaultdict
@@ -8,7 +9,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import scanpy as sc
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, balanced_accuracy_score, f1_score, jaccard_score
 from sklearn.model_selection import StratifiedKFold, cross_val_score
@@ -248,6 +248,14 @@ def main(args):
     if args.verbose:
         for cell_type, genes in signatures.items():
             print(cell_type, ' with signature length: ', len(genes))
+    if args.save_signatures:
+        try:
+            fn = storing_path / f'{args.dataset}_signautres.csv'
+            with open(fn, 'wb') as f:
+                pickle.dump(signatures, f)
+            print(f"Dictionary successfully saved to {fn}")
+        except Exception as e:
+            print(f"Error saving dictionary: {e}")
 
     # Score signatures with all methods
     score_cols, adata = score_signatures_with_all_methods(adata, signatures, args.use_gene_pool, verbose=args.verbose)
@@ -270,12 +278,6 @@ def main(args):
             print(f"""Saved adata to {storing_path / 'adata.h5ad'}""")
 
     # Create plots
-    ## Umap plots
-    # fig = sc.pl.umap(adata, color=all_cols + [args.sample_col, args.gt_annotation_col],
-    #                  ncols=len(signatures) + 1, return_fig=True)
-    # fig.savefig(storing_path / "umap_scores.pdf", bbox_inches='tight')
-    # fig.savefig(storing_path / "umap_scores.svg", bbox_inches='tight')
-
     ## Violin plots
     df_melted = prepare_data_for_violin_plot(adata, args.gt_annotation_col, score_cols)
     fig = get_violin_all_methods(df_melted,
@@ -308,6 +310,8 @@ if __name__ == "__main__":
     parser.add_argument("--use_gene_pool", action="store_true",
                         help="Use gene pool for methods that support")
     parser.add_argument("--nfolds", type=int, default=10, help="Number of folds for cross-validation.")
+    parser.add_argument("--save_signatures", action="store_true",
+                        help="Whether to store the signatures used for scoring.")
     parser.add_argument("--save_adata", action="store_true",
                         help="Figures and data only stored at storing path it flag is set.")
     parser.add_argument("--base_storing_path", default=os.path.join(BASE_PATH_RESULTS, "comparable_score_ranges"),

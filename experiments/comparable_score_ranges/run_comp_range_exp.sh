@@ -20,6 +20,7 @@ for i in "${!datasets[@]}"; do
        --dataset "${dataset}" \
        --sample_col "${sample_col}" \
        --gt_annotation_col "${gt_col}" \
+       --save_signatures \
        --verbose > "logs/${dataset}_base.log" 2>&1
 
     # Remove overlapping genes
