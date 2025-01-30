@@ -1,8 +1,13 @@
 #!/bin/bash
 
-datasets=("breast_malignant" "luad_kim_malignant" "luad_kim_malignant_2" "skin_malignant" "skin_malignant_2" "ovarian_malignant" "pbmc_b_mono_nk" "pbmc_b_subtypes" "pbmc_cd4_subtypes" "pbmc_cd8_subtypes")
-gt_cols=("gene_module" "Cell_subtype" "Cell_subtype" "level2_celltype" "level2_celltype" "cluster_label" "celltype.l1" "celltype.l2" "celltype.l2" "celltype.l2")
-sample_cols=("Patient" "sample" "sample" "patient" "patient" "patient_id" "orig.ident" "orig.ident" "orig.ident" "orig.ident")
+#datasets=("breast_malignant" "luad_kim_malignant" "luad_kim_malignant_2" "skin_malignant" "skin_malignant_2" "ovarian_malignant" "pbmc_b_mono_nk" "pbmc_b_subtypes" "pbmc_cd4_subtypes" "pbmc_cd8_subtypes")
+#gt_cols=("gene_module" "Cell_subtype" "Cell_subtype" "level2_celltype" "level2_celltype" "cluster_label" "celltype.l1" "celltype.l2" "celltype.l2" "celltype.l2")
+#sample_cols=("Patient" "sample" "sample" "patient" "patient" "patient_id" "orig.ident" "orig.ident" "orig.ident" "orig.ident")
+
+datasets=("ovarian_malignant_2" "ovarian_malignant")
+gt_cols=("cluster_label" "cluster_label")
+sample_cols=( "patient_id" "patient_id")
+
 
 # Create logs directory if it doesn't exist
 mkdir -p "./logs"

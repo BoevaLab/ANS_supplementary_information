@@ -2,14 +2,19 @@
 # exit when any command fails
 set -e
 
+cd ..
+
 NORM_METHOD='mean'
 # NORM_METHOD='CP10k'
 
-#for dataset in 'crc' 'escc' 'luad_xing' 'luad_atlas' 'melanoma'; do
-#for dataset in 'luad_xing' 'melanoma'; do
-for dataset in 'breast_malignant'; do
+datasets=('crc' 'escc' 'luad_xing' 'breast_small' 'breast_malignant' \
+          'luad_kim_malignant' 'luad_kim_malignant_2' \
+          'skin_malignant' 'skin_malignant_2' \
+          'ovarian_malignant' 'ovarian_malignant_2' )
+
+for dataset in 'ovarian_malignant_2'; do
     echo "STARTING preprocessing $dataset with norm_method=$NORM_METHOD and sample_based=False."
-    python ../preprocess_cancer_data.py --dataset "$dataset" --norm_method "$NORM_METHOD"
+    python preprocess_cancer_data.py --dataset "$dataset" --norm_method "$NORM_METHOD"
     echo "FINISHED preprocessing."
 #    echo ""
 #

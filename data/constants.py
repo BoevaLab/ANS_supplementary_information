@@ -83,7 +83,8 @@ from dataclasses import dataclass
 DATASETS = [
     'crc', 'escc', 'luad_xing', 'breast', 'breast_large', 'breast_small', 'breast_malignant',
     'melanoma', 'luad_kim_malignant', 'luad_kim_malignant_2', 'skin_malignant', 'skin_malignant_2',
-    'ovarian_malignant', 'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes', 'pbmc'
+    'ovarian_malignant', 'ovarian_malignant_2',
+    'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes', 'pbmc'
 ]
 
 CANCER_DATASETS = DATASETS[0:-5]
@@ -91,7 +92,8 @@ PBMC_DATASETS = DATASETS[-5:]
 
 DATASETS_WITH_ANNOTATIONS = [
     'breast_malignant', 'luad_kim_malignant', 'luad_kim_malignant_2', 'skin_malignant', 'skin_malignant_2',
-    'ovarian_malignant', 'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes',
+    'ovarian_malignant', 'ovarian_malignant_2', 'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes',
+    'pbmc_cd8_subtypes',
 ]
 
 
@@ -124,6 +126,9 @@ CANCER_DATASET_SIGS_CONFIGS = {
         name_transform=lambda k: k.replace('_', ' ')
     ),
     'ovarian_malignant': CancerSignatureConfig(
+        file_path='ovarian_vazquez/ovarian_states.csv'
+    ),
+    'ovarian_malignant_2': CancerSignatureConfig(
         file_path='ovarian_vazquez/ovarian_states.csv'
     )
 }
@@ -202,6 +207,11 @@ VIOLIN_PLOT_CONFIG = {
         wspace=0.15,
         legend_bbox_anchor=(1.13, 1),
     ),
+    'luad_kim_malignant_2': ViolinPlotConfig(
+        aspect=1.15,
+        wspace=0.15,
+        legend_bbox_anchor=(1.13, 1),
+    ),
     'skin_malignant': ViolinPlotConfig(
         textwrap_width=9,
         aspect=1.85,
@@ -210,7 +220,23 @@ VIOLIN_PLOT_CONFIG = {
         col_wrap=2,
         fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
     ),
+    'skin_malignant_2': ViolinPlotConfig(
+        textwrap_width=9,
+        aspect=1.85,
+        wspace=0.1,
+        legend_bbox_anchor=(1.05, 1),
+        col_wrap=2,
+        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
+    ),
     'ovarian_malignant': ViolinPlotConfig(
+        textwrap_width=7,
+        height=2,
+        aspect=3,
+        legend_bbox_anchor=(1, 1),
+        col_wrap=2,
+        fontsizes={'title': 12, 'labels': 10, 'ticks': 10, 'legend': 10}
+    ),
+    'ovarian_malignant_2': ViolinPlotConfig(
         textwrap_width=7,
         height=2,
         aspect=3,

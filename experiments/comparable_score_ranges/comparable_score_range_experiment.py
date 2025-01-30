@@ -2,7 +2,6 @@ import argparse
 import json
 import os
 import sys
-import warnings
 from collections import defaultdict
 from dataclasses import asdict
 from pathlib import Path
@@ -16,7 +15,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 import signaturescoring as ssc
-from signaturescoring.scoring_methods.gmm_postprocessing import GMMPostprocessor
 
 sys.path.append('../../data')
 
@@ -125,37 +123,6 @@ def get_lbl_assignment_performance(adata, y_true_col, y_pred_col, label_names, a
     return conf_mat, bal_acc, f1_val, jacc_score
 
 
-def get_gmm_perf(adata, method_name, y_true_col, score_cols, K=3, avg='weighted', verbose=False):
-    gmm_post = GMMPostprocessor(n_components=K)
-
-    store_name_pred, store_names_proba, _ = gmm_post.fit_and_predict(adata, score_cols)
-
-    assignments = gmm_post.assign_clusters_to_signatures(adata, score_cols, store_names_proba, plot=False)
-    if verbose:
-        print("GMM score mapping: ", assignments)
-
-    gmm_cols = []
-    for key, val in assignments.items():
-        if key == "rest":
-            warnings.warn(
-                f"Couldn't could find correct GMM cluster and signature mapping. Skipping {score_cols} is advised"
-            )
-            continue
-        adata.obs[key + "_gmm"] = adata.obs[val].copy()
-        gmm_cols.append(key + "_gmm")
-
-    y = adata.obs[y_true_col].values
-    y_pred = adata.obs[gmm_cols].idxmax(axis=1)
-    y_pred = y_pred.apply(lambda x: x.split(f'_{method_name}_')[0])
-    y_pred = y_pred.apply(lambda x: x.replace('_', ' '))
-
-    return (
-        f1_score(y, y_pred, average=avg),
-        balanced_accuracy_score(y, y_pred),
-        jaccard_score(y, y_pred, average=avg),
-    )
-
-
 def get_information_from_scores(adata, y_true_col, score_cols, nfold=10, max_iter=1000):
     X = adata.obs.loc[:, score_cols].values
     y = adata.obs[y_true_col].values
@@ -187,18 +154,11 @@ def get_all_performances(score_cols, label_cols, adata, y_true_col, signature_or
                                                                                y_pred_col=lbl_col,
                                                                                label_names=signature_order)
 
-        # GMM
-        f1_gmm, bal_acc_gmm, jacc_score_gmm = get_gmm_perf(adata, method_name, y_true_col, method_scores,
-                                                           K=len(method_scores))
-
         method_metrics.update({
             'conf_mat': conf_mat,
             'balanced_accuracy': bal_acc,
             'f1_score': f1_val,
-            'jaccard_score': jacc_score,
-            'gmm_balanced_accuracy': bal_acc_gmm,
-            'gmm_f1_score': f1_gmm,
-            'gmm_jaccard_score': jacc_score_gmm
+            'jaccard_score': jacc_score
         })
 
         # Logreg
