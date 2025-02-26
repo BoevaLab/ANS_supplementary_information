@@ -732,53 +732,53 @@ def main(config):
     if config.save:
         adata.obs.to_csv(fn)
 
-    # sc.logging.info(f'-----------------------------------------------------------------')
-    # sc.logging.info(f'Get distribution information per malignancy and scoring_mode group.')
-    # start = datetime.now()
-    # stat_data = get_stats_over_modes(adata)
-    # if config.save:
-    #     stat_data.to_csv(os.path.join(storing_path, f'distribution_info_scores.csv'))
-    # sc.logging.info(f'> Duration {datetime.now() - start}.')
+    sc.logging.info(f'-----------------------------------------------------------------')
+    sc.logging.info(f'Get distribution information per malignancy and scoring_mode group.')
+    start = datetime.now()
+    stat_data = get_stats_over_modes(adata)
+    if config.save:
+        stat_data.to_csv(os.path.join(storing_path, f'distribution_info_scores.csv'))
+    sc.logging.info(f'> Duration {datetime.now() - start}.')
 
-    #
-    # if config.dataset == 'crc':
-    #     sc.logging.info(f'-----------------------------------------------------------------')
-    #     sc.logging.info(f'Compare sample mean scores of malignant cells between the two chemistries.')
-    #     start = datetime.now()
-    #
-    #     pvals, score_means = get_pvals_chemistry(adata)
-    #
-    #     if config.save:
-    #         plt.rcParams.update(
-    #             {'pdf.fonttype': 42, 'font.family': 'sans-serif', 'font.sans-serif': 'Arial', 'font.size': 16})
-    #         pvals.to_csv(os.path.join(storing_path, f'mal_mean_scores_chemistry_pvals.csv'))
-    #         score_means.to_csv(os.path.join(storing_path, f'mal_mean_and_var_scores.csv'))
-    #         plot_pval_heatmaps(pvals, storing_path)
-    #
-    #     sc.logging.info(f'> Duration {datetime.now() - start}.')
-    #
-    # sc.logging.info(f'-----------------------------------------------------------------')
-    # sc.logging.info(f'Create strip plot of per sample mean scores grouped by chemistry and malignancy.')
-    # start = datetime.now()
-    # ext_storing_path = os.path.join(storing_path, 'strip_plots')
-    # if config.save and not os.path.exists(ext_storing_path):
-    #     os.makedirs(ext_storing_path)
-    # plt.rcParams.update({'pdf.fonttype': 42, 'font.family': 'sans-serif', 'font.sans-serif': 'Arial', 'font.size': 16})
-    # fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=False, exclude_jasmine=False)
-    # if config.save:
-    #     fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_wppsi_wjas.svg'), format='svg')
-    #
-    # fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=True, exclude_jasmine=False)
-    # if config.save:
-    #     fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_woppsi_wjas.svg'), format='svg')
-    #
-    # fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=False, exclude_jasmine=True)
-    # if config.save:
-    #     fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_wppsi_wojas.svg'), format='svg')
-    #
-    # fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=True, exclude_jasmine=True)
-    # if config.save:
-    #     fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_woppsi_wojas.svg'), format='svg')
+    
+    if config.dataset == 'crc':
+        sc.logging.info(f'-----------------------------------------------------------------')
+        sc.logging.info(f'Compare sample mean scores of malignant cells between the two chemistries.')
+        start = datetime.now()
+    
+        pvals, score_means = get_pvals_chemistry(adata)
+    
+        if config.save:
+            plt.rcParams.update(
+                {'pdf.fonttype': 42, 'font.family': 'sans-serif', 'font.sans-serif': 'Arial', 'font.size': 16})
+            pvals.to_csv(os.path.join(storing_path, f'mal_mean_scores_chemistry_pvals.csv'))
+            score_means.to_csv(os.path.join(storing_path, f'mal_mean_and_var_scores.csv'))
+            plot_pval_heatmaps(pvals, storing_path)
+    
+        sc.logging.info(f'> Duration {datetime.now() - start}.')
+    
+    sc.logging.info(f'-----------------------------------------------------------------')
+    sc.logging.info(f'Create strip plot of per sample mean scores grouped by chemistry and malignancy.')
+    start = datetime.now()
+    ext_storing_path = os.path.join(storing_path, 'strip_plots')
+    if config.save and not os.path.exists(ext_storing_path):
+        os.makedirs(ext_storing_path)
+    plt.rcParams.update({'pdf.fonttype': 42, 'font.family': 'sans-serif', 'font.sans-serif': 'Arial', 'font.size': 16})
+    fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=False, exclude_jasmine=False)
+    if config.save:
+        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_wppsi_wjas.svg'), format='svg')
+    
+    fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=True, exclude_jasmine=False)
+    if config.save:
+        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_woppsi_wjas.svg'), format='svg')
+    
+    fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=False, exclude_jasmine=True)
+    if config.save:
+        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_wppsi_wojas.svg'), format='svg')
+    
+    fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=True, exclude_jasmine=True)
+    if config.save:
+        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_woppsi_wojas.svg'), format='svg')
 
     sc.logging.info(f'> Duration {datetime.now() - start}.')
 

@@ -4,10 +4,10 @@
 ## !!!!!! TODO: CHANGE path to folder where data and experiments should go !!!!!!!
 from typing import Dict, List, Tuple
 
-BASE_PATH_DRIVE = '/Users/lciernik/Documents/TUB/projects/ans_scoring'
+BASE_PATH_DRIVE = '...'
 
 BASE_PATH_EXPERIMENTS = BASE_PATH_DRIVE + '/experiments'
-BASE_PATH_RESULTS = BASE_PATH_DRIVE + '/results_2'
+BASE_PATH_RESULTS = BASE_PATH_DRIVE + '/results'
 BASE_PATH_DATA = BASE_PATH_DRIVE + '/data'
 BASE_PATH_RAW_CANCER = BASE_PATH_DATA + '/raw_data'
 BASE_PATH_CANSIG_PP_CANCER = BASE_PATH_DATA + '/cansig_processed'
@@ -76,7 +76,12 @@ BASE_PATH_ANNOT_PBMC = BASE_PATH_DATA + '/annotations/citeseq_pbmc'
 # Vázquez-García, I., Uhlitz, F., Ceglia, N. et al. Ovarian cancer mutational processes drive
 # site-specific immune evasion. Nature 612, 778–786 (2022). https://doi.org/10.1038/s41586-022-05496-1
 
-# 'pbmc': #TODO: add citation
+# 'pbmc': Hao, Y., Hao, S., Andersen-Nissen, E., Mauck, W. M., Zheng, S., Butler, A., Lee, M. J.,
+#  Wilk, A. J., Darby, C., Zager, M., Hoffman, P., Stoeckius, M., Papalexi, E., Mimitou, E. P.,
+#  Jain, J., Srivastava, A., Stuart, T., Fleming, L. M., Yeung, B., . . .  Satija, R. (2021).
+#  Integrated analysis of multimodal single-cell data. Cell, 184(13), 3573-3587.e29.
+#  https://doi.org/10.1016/j.cell.2021.04.048
+#  Direct data download: https://atlas.fredhutch.org/nygc/multimodal-pbmc/
 
 from dataclasses import dataclass
 

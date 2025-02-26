@@ -18,25 +18,25 @@ bash run_control_bias.sh --base_storing_path "$BASE_STORING_PATH/control_bias"|&
 echo "> Finished control bias experiment"
 echo ""
 
-#####################################################################################################
-# COMPARABLE SCORE RANGE EXPERIMENT
-#####################################################################################################
-cd "$PATH_TO_REPO/experiments/comparable_score_ranges"
-echo "> Starting comparable score range experiments EASY TASK"
-echo "> !!!! NOTE: CHANGE STORING PATH IN experiments/run_exp_b_mono_nk.sh !!!!"
-
-bash run_exp_b_mono_nk.sh |& tee -a "$BASE_STORING_PATH/comparable_score_ranges/logs/logs_easy_task.txt"
-
-echo "> Finished comparable score range experiments EASY TASK"
-echo ""
-
-echo "> Starting comparable score range experiments HARD TASK"
-echo "> !!!! NOTE: CHANGE STORING PATH IN experiments/run_exp_b_subtypes.sh !!!!"
-
-bash run_exp_b_subtypes.sh |& tee -a "$BASE_STORING_PATH/comparable_score_ranges/logs/logs_HARD_task.txt"
-
-echo "> Finished comparable score range experiments HARD TASK"
-echo ""
+######################################################################################################
+## COMPARABLE SCORE RANGE EXPERIMENT OLD
+######################################################################################################
+#cd "$PATH_TO_REPO/experiments/comparable_score_ranges"
+#echo "> Starting comparable score range experiments EASY TASK"
+#echo "> !!!! NOTE: CHANGE STORING PATH IN experiments/run_exp_b_mono_nk.sh !!!!"
+#
+#bash run_exp_b_mono_nk.sh |& tee -a "$BASE_STORING_PATH/comparable_score_ranges/logs/logs_easy_task.txt"
+#
+#echo "> Finished comparable score range experiments EASY TASK"
+#echo ""
+#
+#echo "> Starting comparable score range experiments HARD TASK"
+#echo "> !!!! NOTE: CHANGE STORING PATH IN experiments/run_exp_b_subtypes.sh !!!!"
+#
+#bash run_exp_b_subtypes.sh |& tee -a "$BASE_STORING_PATH/comparable_score_ranges/logs/logs_HARD_task.txt"
+#
+#echo "> Finished comparable score range experiments HARD TASK"
+#echo ""
 
 
 echo "FINISHED CONTROL BIAS AND COMPARABLE SCORE RANGE EXPERIMENTS"
