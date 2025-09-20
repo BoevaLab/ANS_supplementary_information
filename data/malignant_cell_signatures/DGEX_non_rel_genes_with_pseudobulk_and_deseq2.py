@@ -9,10 +9,11 @@ import scanpy as sc
 from pydeseq2.dds import DeseqDataSet
 from pydeseq2.ds import DeseqStats
 
+sys.path.append('..')
+sys.path.append('../..')
+
 from constants import CANCER_DATASETS, NORM_METHODS, BASE_PATH_DGEX_CANCER
 from load_data import load_datasets
-
-sys.path.append('..')
 from experiments.experiment_utils import AttributeDict
 
 # Global settings
@@ -92,7 +93,8 @@ def main(config):
     dds.deseq2()
 
     sc.logging.info(f'Compute DeseqStats.')
-    stat_res = DeseqStats(dds, n_cpus=config.ncpu, joblib_verbosity=0)
+    # stat_res = DeseqStats(dds, n_cpus=config.ncpu, joblib_verbosity=0)
+    stat_res = DeseqStats(dds)
 
     # Compute Wald test
     sc.logging.info(f'Compute Wald test.')

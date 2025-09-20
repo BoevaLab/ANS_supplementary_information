@@ -6,7 +6,7 @@ NORM_METHOD='mean'
 
 cd ../malignant_cell_signatures
 
-datasets=('crc' 'escc' 'luad_xing')
+datasets=('crc' 'escc')
 
 for dataset in ${datasets[@]}; do
     echo "STARTING extraction malignant signature for $dataset with norm_method=$NORM_METHOD."
