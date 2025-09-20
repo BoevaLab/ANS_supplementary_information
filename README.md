@@ -61,36 +61,50 @@ conda create -n scoring_env python=3.9.18
 conda activate scoring_env
 pip install -r requirements.txt
 ```
+Alternatively, you can use the `environment.yml` file to create the environment with conda (with and without build hashes).
+
 **Note I**: There are also `environment.yml` files that can be used to create the environment with conda (with and without build hashes).
 
 **Note II**: For running the experiments with `R`, see the `session_info.txt` file in `notebooks/construction_scoring_methods` for the used R packages.
 
+
+## Data Availability
+We make the preprocessed datasets (CRC, ESCC, LUAD (Xing), LUAD (Kim), breast cancer, skin cancer, ovarian cancer, and PBMC) and the used signatures available for download. There are two options to download the data:
+1. Use the `data/download_preprocessed_datasets.py` script to download the data from the Google Drive folder.
+2. Download the data manually from the Google Drive folder, 
+[here](https://drive.google.com/drive/folders/10L2gqapJbyOn_MbrZRHQG--n0Xj7wIyg?usp=sharing). 
+
+The Google Drive folder also contains the CanSig preprocessed datasets. In case you want to use them and get to the final preprocessed datasets, please run:
+```
+cd ./data/sh_files
+bash run_preprocessing_cancer.sh
+```
+
+
 ## Rerunning experiments
 After downloading the data (see below) and correctly modifying the paths in `data/constants.py`, we can run the experiments. The figures for the experiments are created in the `notebooks` folder. **Note:** Manual correction of the storing paths in the jupyter notebooks might be required.  
 - Preprocessing (This step can be skipped if `preprocessed` data and signatures have been downloaded): 
-    - Make sure to download all the datasets of the `cansig_preprocessed` folder (see "Data Availability" below). 
+    - Make sure to download all the datasets of the `cansig_preprocessed` folder (see "Data Availability" above). 
     - Run the `data/run_preprocessing_cancer.sh` script for a desired dataset (CRC, ESCC, LUAD_xing, LUAD, BRCA, HGSOC, sCC). 
     - Then, get the malignant signatures by running `data/run_dgex_cancer_sigs_with_pseudobulks.sh`. 
-- Benchmark experiments (**NOTE: Change the storing paths in the bash files**):
+- **TODO adapt this section as it is outdated!!!!!** Benchmark experiments (**NOTE: Change the storing paths in the bash files**):
     - The optimal control gene selection/ induced control bias experiment can be rerun by running `experiments/run_pbmc_experiments.sh` bash script. **NOTE**: Change the storing paths in the bash files of the comparable score range experiments, i.e.,`experiments/comparable_score_ranges/run_exp_[...].sh`
-    - The "data composition," "signature length," and "noise robustness experiments" can be rerun by running `experiments/run_all_cancer_experiments_on_dataset.sh` bash script with a desired preprocessed dataset (CRC, ESCC, LUAD).
+    - The "data composition," "signature length," and "noise robustness experiments" can be rerun by running `experiments/run_all_cancer_experiments_on_dataset.sh` bash script with a desired preprocessed dataset (CRC, ESCC, LUAD_xing).
     - The `runtime` experiment can be reproduced by running the jupyter notebook in the `experiments/runtime` folder.
     - The experiment analysing the score ranges of the different scoring methods can be rerun by running the script `experiments/run_comp_range_exp.sh`.
     - Run the different Jupyter notebooks in the `notebooks` folder to create the remaining visualizations. 
 - EMT case study:
-    - For each cancer type (CRC, ESCC, LUAD, breast cancer) run the `get_cancer_emt_cells.ipynb` Jupyter notebook (`notebooks/EMT_scoring_experiments/CANCER_TYPE`)
+    - For each cancer type (CRC, ESCC, LUAD_xing, breast cancer) run the `get_cancer_emt_cells.ipynb` Jupyter notebook (`notebooks/EMT_scoring_experiments/CANCER_TYPE`)
     - Run `notebooks/EMT_scoring_experiments/ESCC/find_cancer_emt_signature_ESCC.ipynb`  to find the ESCC-specific cancer EMT signature 
-    - Run `notebooks/EMT_scoring_experiments/LUAD/find_cancer_emt_signature_LUAD.ipynb`  to find the ESCC-specific cancer EMT signature 
-    - Run `notebooks/EMT_scoring_experiments/ESCC/union_ESCC_and_LUAD_specific_EMT_signature_and_refine_on_ESCC.ipynb`  to find the ESCC- and LUAD-specific cancer EMT signature. 
+    - Run `notebooks/EMT_scoring_experiments/LUAD_xing/find_cancer_emt_signature_LUAD.ipynb`  to find the ESCC-specific cancer EMT signature 
+    - Run `notebooks/EMT_scoring_experiments/ESCC/union_ESCC_and_LUAD_specific_EMT_signature_and_refine_on_ESCC.ipynb`  to find the ESCC- and LUAD_xing-specific cancer EMT signature. 
     - Run to evaluate the new signature on CRC and breast carcinoma `notebooks/EMT_scoring_experiments/evaluation_LUNG_ESCC_signatures.ipynb`.
     - TCGA evaluation can be found in the folder `notebooks/EMT_scoring_experiments/association_with_histotypes`
 
 
-## Data Availability
-The preprocessed datasets in `.h5ad` format for CRC, ESCC, LUAD, breast cancer, and PBMC (folder `preprocessed`) and used signatures (folder `dgex_genes`) can be downloaded 
-[here](https://drive.google.com/drive/folders/10L2gqapJbyOn_MbrZRHQG--n0Xj7wIyg?usp=sharing). 
 
 
 ## Correspondance 
 First: [Laure Ciernik](mailto:laure.ciernik@gmail.com) and [Agnieszka Kraft](mailto:agnieszka.kraft@inf.ethz.ch)
+
 Second: [Prof. Valentina Boeva](mailto:valentina.boeva@inf.ethz.ch)
