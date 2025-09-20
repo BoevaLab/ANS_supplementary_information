@@ -314,21 +314,21 @@ def get_pvals_chemistry(adata):
     return pvals, score_means
 
 
-# def get_stats_over_modes(adata):
-#     subnames = ['Scanpy', 'Seurat', 'ANS', 'Jasmine', 'UCell']
-#     cols = [col for col in adata.obs.columns if any(map(col.__contains__, subnames))]
-#     stat_methods = ['mean', 'var', 'std', 'min', 'max', 'median']
-#     name_mapping = {'all_samples': 'Scoring all samples together',
-#                     'si_ppas': 'Scoring each sample individually (preprocessed together)',
-#                     'si_ppsi': 'Scoring each sample individually (preprocessed independently)',
-#                     }
-#     aggregated_data = adata.obs.groupby('malignant_key')[cols].agg({col: stat_methods for col in cols})
-#     aggregated_data = aggregated_data.T
-#     aggregated_data = aggregated_data.reset_index()
-#     aggregated_data.columns = ['scoring_method', 'stat_method', 'malignant', 'non-malignant']
-#     aggregated_data['scoring_mode'] = aggregated_data.scoring_method.apply(lambda x: name_mapping['_'.join(x.split('_')[-2:])])
-#     aggregated_data['scoring_method'] = aggregated_data.scoring_method.apply(lambda x: '_'.join(x.split('_')[0:-4]))
-#     return aggregated_data
+def get_stats_over_modes(adata):
+    subnames = ['Scanpy', 'Seurat', 'ANS', 'Jasmine', 'UCell']
+    cols = [col for col in adata.obs.columns if any(map(col.__contains__, subnames))]
+    stat_methods = ['mean', 'var', 'std', 'min', 'max', 'median']
+    name_mapping = {'all_samples': 'Scoring all samples together',
+                    'si_ppas': 'Scoring each sample individually (preprocessed together)',
+                    'si_ppsi': 'Scoring each sample individually (preprocessed independently)',
+                    }
+    aggregated_data = adata.obs.groupby('malignant_key')[cols].agg({col: stat_methods for col in cols})
+    aggregated_data = aggregated_data.T
+    aggregated_data = aggregated_data.reset_index()
+    aggregated_data.columns = ['scoring_method', 'stat_method', 'malignant', 'non-malignant']
+    aggregated_data['scoring_mode'] = aggregated_data.scoring_method.apply(lambda x: name_mapping['_'.join(x.split('_')[-2:])])
+    aggregated_data['scoring_method'] = aggregated_data.scoring_method.apply(lambda x: '_'.join(x.split('_')[0:-4]))
+    return aggregated_data
 
 
 def plot_pval_heatmaps(pvals, storing_path):
@@ -345,14 +345,14 @@ def plot_pval_heatmaps(pvals, storing_path):
         'scoring_method')[['MannWhitneyU p-val', 'ttest p-val']].loc[col_order], annot=True)
     plt.yticks(rotation=0);
     plt.title('Scoring each sample individually (preprocessed together)');
-    plt.savefig(os.path.join(storing_path, f'pvals_mal_means_chem_not_corrected_ppas.svg'), format='svg')
+    plt.savefig(os.path.join(storing_path, f'pvals_mal_means_chem_not_corrected_ppas.svg'), format='svg', bbox_inches='tight')
 
     plt.figure(figsize=(6, 10))
     sns.heatmap(pvals[pvals.scoring_mode == 'Scoring each sample individually (preprocessed independently)'].set_index(
         'scoring_method')[['MannWhitneyU p-val', 'ttest p-val']].loc[col_order], annot=True)
     plt.yticks(rotation=0);
     plt.title('Scoring each sample individually (preprocessed independently)');
-    plt.savefig(os.path.join(storing_path, f'pvals_mal_means_chem_not_corrected_ppsi.svg'), format='svg')
+    plt.savefig(os.path.join(storing_path, f'pvals_mal_means_chem_not_corrected_ppsi.svg'), format='svg', bbox_inches='tight')
 
 
 def create_strip_plot_crc(adata, exclude_dge_si_ppsi=False, exclude_jasmine=False):
@@ -653,17 +653,10 @@ def main(config):
     config['storing_path'] = storing_path
     sc.logging.info(f'-----------------------------------------------------------------')
     sc.logging.info(f'Got the storing path {storing_path}. Storing experiment configuration ...')
-    # start = datetime.now()
-    # if config.save:
-    #     with open(os.path.join(storing_path, 'config.txt'), "w") as fp:
-    #         json.dump(config, fp, indent=4)  # encode dict into JSON
-    #
-    # sc.logging.info(f'> Duration {datetime.now() - start}.')
 
     sc.logging.info(f'-----------------------------------------------------------------')
     sc.logging.info(f'Get the signatures for malignant cells in decreasing and random log2FC order.')
     start = datetime.now()
-    # gene_list_most_de, gene_list_random_de = get_malignant_signature(
     gene_list_most_de = get_malignant_signature(
         dataset=config.dataset,
         norm_method=config.norm_method,
@@ -766,19 +759,19 @@ def main(config):
     plt.rcParams.update({'pdf.fonttype': 42, 'font.family': 'sans-serif', 'font.sans-serif': 'Arial', 'font.size': 16})
     fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=False, exclude_jasmine=False)
     if config.save:
-        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_wppsi_wjas.svg'), format='svg')
+        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_wppsi_wjas.svg'), format='svg', bbox_inches='tight')
     
     fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=True, exclude_jasmine=False)
     if config.save:
-        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_woppsi_wjas.svg'), format='svg')
+        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_woppsi_wjas.svg'), format='svg', bbox_inches='tight')
     
     fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=False, exclude_jasmine=True)
     if config.save:
-        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_wppsi_wojas.svg'), format='svg')
+        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_wppsi_wojas.svg'), format='svg', bbox_inches='tight')
     
     fig = create_strip_plot(config.dataset, adata, exclude_dge_si_ppsi=True, exclude_jasmine=True)
     if config.save:
-        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_woppsi_wojas.svg'), format='svg')
+        fig.savefig(os.path.join(ext_storing_path, f'strip_sample_mean_scores_woppsi_wojas.svg'), format='svg', bbox_inches='tight')
 
     sc.logging.info(f'> Duration {datetime.now() - start}.')
 

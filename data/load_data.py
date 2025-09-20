@@ -8,9 +8,12 @@ import pandas as pd
 import scanpy as sc
 
 sys.path.append('.')
+PARENT_PATH = Path(__file__).parent
+sys.path.append(str(PARENT_PATH))
 
-# from .constants import (
+
 from constants import (
+# from constants import (
     # Paths
     BASE_PATH_RAW_CANCER,
     BASE_PATH_RAW_PBMC,

@@ -81,8 +81,9 @@ bash run_preprocessing_cancer.sh
 ```
 
 
-## Rerunning experiments
-After downloading the data (see below) and correctly modifying the paths in `data/constants.py`, we can run the experiments. The figures for the experiments are created in the `notebooks` folder. **Note:** Manual correction of the storing paths in the jupyter notebooks might be required.  
+## Rerunning experiments: **TODO adapt this section as it is outdated!!!!!**
+After downloading the data (see below) and correctly modifying the paths in `data/constants.py`, we can run the experiments. The figures for the experiments are created in the `notebooks` folder. **Note:** Manual correction of the storing paths in the jupyter notebooks might be required. 
+
 - Preprocessing (This step can be skipped if `preprocessed` data and signatures have been downloaded): 
     - Make sure to download all the datasets of the `cansig_preprocessed` folder (see "Data Availability" above). 
     - Run the `data/run_preprocessing_cancer.sh` script for a desired dataset (CRC, ESCC, LUAD_xing, LUAD, BRCA, HGSOC, sCC). 

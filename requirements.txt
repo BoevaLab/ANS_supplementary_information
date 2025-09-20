@@ -29,3 +29,4 @@ sc_toolbox
 pyreadr
 matplotlib_venn
 gdown
+adjustText

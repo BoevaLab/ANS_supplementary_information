@@ -8,9 +8,11 @@ import pandas as pd
 import scanpy as sc
 from tqdm import tqdm
 
+sys.path.append('..')
+sys.path.append('../..')
+
 from load_data import load_datasets
 from constants import BASE_PATH_DGEX_CANCER
-sys.path.append('..')
 from experiments.experiment_utils import AttributeDict
 
 # Global settings
