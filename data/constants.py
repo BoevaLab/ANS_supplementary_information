@@ -2,20 +2,35 @@
 ####################################################################################
 ### PATHS
 ## !!!!!! TODO: CHANGE path to folder where data and experiments should go !!!!!!!
+import os
 from typing import Dict, List, Tuple
 
-BASE_PATH_DRIVE = '...'
+# BASE_PATH_DRIVE = '...'
+# BASE_PATH_DRIVE = '/Users/lciernik/Documents/TUB/projects/ans_scoring'
+BASE_PATH_DRIVE = "/Users/lciernik/Documents/TUB/projects/ans_scoring/reproduce_project"
 
-BASE_PATH_EXPERIMENTS = BASE_PATH_DRIVE + '/experiments'
-BASE_PATH_RESULTS = BASE_PATH_DRIVE + '/results'
-BASE_PATH_DATA = BASE_PATH_DRIVE + '/data'
-BASE_PATH_RAW_CANCER = BASE_PATH_DATA + '/raw_data'
-BASE_PATH_CANSIG_PP_CANCER = BASE_PATH_DATA + '/cansig_processed'
-BASE_PATH_RAW_PBMC = BASE_PATH_DATA + '/raw_data/pbmc_citeseq.h5ad'
-BASE_PATH_PREPROCESSED = BASE_PATH_DATA + '/preprocessed'
-BASE_PATH_DGEX_CANCER = BASE_PATH_DATA + '/dgex_genes'
-BASE_PATH_ANNOT_CANCER = BASE_PATH_DATA + '/annotations/cancer'
-BASE_PATH_ANNOT_PBMC = BASE_PATH_DATA + '/annotations/citeseq_pbmc'
+BASE_PATH_EXPERIMENTS = BASE_PATH_DRIVE + "/experiments"
+# BASE_PATH_RESULTS = BASE_PATH_DRIVE + '/results'
+# BASE_PATH_RESULTS = BASE_PATH_DRIVE + '/results_2'
+BASE_PATH_RESULTS = BASE_PATH_DRIVE + "/results"
+BASE_PATH_DATA = BASE_PATH_DRIVE + "/data"
+BASE_PATH_RAW_CANCER = BASE_PATH_DATA + "/raw_data"
+BASE_PATH_CANSIG_PP_CANCER = BASE_PATH_DATA + "/cansig_processed"
+BASE_PATH_RAW_PBMC = BASE_PATH_DATA + "/raw_data/pbmc_citeseq.h5ad"
+BASE_PATH_PREPROCESSED = BASE_PATH_DATA + "/preprocessed"
+BASE_PATH_DGEX_CANCER = BASE_PATH_DATA + "/dgex_genes"
+BASE_PATH_ANNOT = BASE_PATH_DATA + "/annotations"
+BASE_PATH_ANNOT_CANCER = BASE_PATH_ANNOT + "/cancer"
+BASE_PATH_ANNOT_PBMC = BASE_PATH_ANNOT + "/citeseq_pbmc"
+
+folders_to_create = [
+    BASE_PATH_DRIVE,
+    BASE_PATH_EXPERIMENTS,
+    BASE_PATH_RESULTS,
+    BASE_PATH_DATA,
+    BASE_PATH_CANSIG_PP_CANCER,
+    BASE_PATH_PREPROCESSED,
+]
 
 ####################################################################################
 ### AVAILABLE DATASETS
@@ -86,106 +101,141 @@ BASE_PATH_ANNOT_PBMC = BASE_PATH_DATA + '/annotations/citeseq_pbmc'
 from dataclasses import dataclass
 
 DATASETS = [
-    'crc', 'escc', 'luad_xing', 'breast', 'breast_large', 'breast_small', 'breast_malignant',
-    'melanoma', 'luad_kim_malignant', 'luad_kim_malignant_2', 'skin_malignant', 'skin_malignant_2',
-    'ovarian_malignant', 'ovarian_malignant_2',
-    'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes', 'pbmc_cd8_subtypes', 'pbmc'
+    "crc",
+    "escc",
+    "luad_xing",
+    "breast",
+    "breast_basal_like_samples",
+    "breast_malignant",
+    "luad_kim",
+    "luad_kim_malignant",
+    "luad_kim_malignant_3ca",
+    "skin_malignant_manual",
+    "skin_malignant",
+    "ovarian_malignant",
+    "ovarian_malignant_cellxgene",
+    "pbmc_b_mono_nk",
+    "pbmc_b_subtypes",
+    "pbmc_cd4_subtypes",
+    "pbmc_cd8_subtypes",
+    "pbmc",
 ]
 
 CANCER_DATASETS = DATASETS[0:-5]
 PBMC_DATASETS = DATASETS[-5:]
 
 DATASETS_WITH_ANNOTATIONS = [
-    'breast_malignant', 'luad_kim_malignant', 'luad_kim_malignant_2', 'skin_malignant', 'skin_malignant_2',
-    'ovarian_malignant', 'ovarian_malignant_2', 'pbmc_b_mono_nk', 'pbmc_b_subtypes', 'pbmc_cd4_subtypes',
-    'pbmc_cd8_subtypes',
+    "breast_malignant",
+    "luad_kim_malignant",
+    "luad_kim_malignant_3ca",
+    "skin_malignant_manual",
+    "skin_malignant",
+    "ovarian_malignant",
+    "ovarian_malignant_cellxgene",
+    "pbmc_b_mono_nk",
+    "pbmc_b_subtypes",
+    "pbmc_cd4_subtypes",
+    "pbmc_cd8_subtypes",
 ]
 
 
 @dataclass
 class CancerSignatureConfig:
     """Configuration for signature file loading."""
+
     file_path: str
-    file_type: str = 'csv'
+    file_type: str = "csv"
     name_transform: callable = None
 
 
 CANCER_DATASET_SIGS_CONFIGS = {
-    'breast_malignant': CancerSignatureConfig(
-        file_path='breast_wu/wu_6.csv'
+    "breast_malignant": CancerSignatureConfig(file_path="breast_wu/wu_6.csv"),
+    "luad_kim_malignant": CancerSignatureConfig(file_path="luad_kim/kim_3.csv"),
+    "luad_kim_malignant_3ca": CancerSignatureConfig(file_path="luad_kim/kim_3.csv"),
+    "skin_malignant_manual": CancerSignatureConfig(
+        file_path="skin_ji/gene_sets.gmt",
+        file_type="gmt",
+        name_transform=lambda k: k.replace("_", " "),
     ),
-    'luad_kim_malignant': CancerSignatureConfig(
-        file_path='luad_kim/kim_3.csv'
+    "skin_malignant": CancerSignatureConfig(
+        file_path="skin_ji/gene_sets.gmt",
+        file_type="gmt",
+        name_transform=lambda k: k.replace("_", " "),
     ),
-    'luad_kim_malignant_2': CancerSignatureConfig(
-        file_path='luad_kim/kim_3.csv'
+    "ovarian_malignant": CancerSignatureConfig(
+        file_path="ovarian_vazquez/ovarian_states.csv"
     ),
-    'skin_malignant': CancerSignatureConfig(
-        file_path='skin_ji/gene_sets.gmt',
-        file_type='gmt',
-        name_transform=lambda k: k.replace('_', ' ')
+    "ovarian_malignant_cellxgene": CancerSignatureConfig(
+        file_path="ovarian_vazquez/ovarian_states.csv"
     ),
-    'skin_malignant_2': CancerSignatureConfig(
-        file_path='skin_ji/gene_sets.gmt',
-        file_type='gmt',
-        name_transform=lambda k: k.replace('_', ' ')
-    ),
-    'ovarian_malignant': CancerSignatureConfig(
-        file_path='ovarian_vazquez/ovarian_states.csv'
-    ),
-    'ovarian_malignant_2': CancerSignatureConfig(
-        file_path='ovarian_vazquez/ovarian_states.csv'
-    )
 }
 
-PBMC_DEXG = BASE_PATH_ANNOT_PBMC + '/DE_by_celltype.csv'
+PBMC_DEXG = BASE_PATH_ANNOT_PBMC + "/DE_by_celltype.csv"
 
 
 @dataclass
 class PBMCSignatureConfig:
     """Configuration for signature file loading."""
+
     high_level_low_level_mapping: Dict[str, List[str]]
 
 
 PBMC_DATASET_SIGS_CONFIGS = {
-    'pbmc_b_mono_nk': PBMCSignatureConfig(
+    "pbmc_b_mono_nk": PBMCSignatureConfig(
         high_level_low_level_mapping={
-            'B': ['B naive kappa', 'B memory kappa', 'B naive lambda',
-                  'B memory lambda', 'B intermediate kappa',
-                  'B intermediate lambda', 'Plasma', 'Plasmablast'],
-            'Mono': ['CD14 Mono', 'CD16 Mono'],
-            'NK': ['NK_2', 'NK_4', 'NK_1', 'NK_3', 'NK_CD56bright',
-                   'NK Proliferating']
-        }),
-    'pbmc_b_subtypes': PBMCSignatureConfig(
+            "B": [
+                "B naive kappa",
+                "B memory kappa",
+                "B naive lambda",
+                "B memory lambda",
+                "B intermediate kappa",
+                "B intermediate lambda",
+                "Plasma",
+                "Plasmablast",
+            ],
+            "Mono": ["CD14 Mono", "CD16 Mono"],
+            "NK": ["NK_2", "NK_4", "NK_1", "NK_3", "NK_CD56bright", "NK Proliferating"],
+        }
+    ),
+    "pbmc_b_subtypes": PBMCSignatureConfig(
         high_level_low_level_mapping={
-            'B intermediate': ['B intermediate kappa', 'B intermediate lambda'],
-            'B memory': ['B memory kappa', 'B memory lambda'],
-            'B naive': ['B naive kappa', 'B naive lambda']
-        }),
-    'pbmc_cd4_subtypes': PBMCSignatureConfig(
+            "B intermediate": ["B intermediate kappa", "B intermediate lambda"],
+            "B memory": ["B memory kappa", "B memory lambda"],
+            "B naive": ["B naive kappa", "B naive lambda"],
+        }
+    ),
+    "pbmc_cd4_subtypes": PBMCSignatureConfig(
         high_level_low_level_mapping={
-            'CD4 CTL': ['CD4 CTL'],
-            'CD4 Naive': ['CD4 Naive'],
-            'CD4 Proliferating': ['CD4 Proliferating'],
-            'CD4 TCM': ['CD4 TCM_1', 'CD4 TCM_3', 'CD4 TCM_2'],
-            'CD4 TEM': ['CD4 TEM_3', 'CD4 TEM_1', 'CD4 TEM_2', 'CD4 TEM_4'],
-            'Treg': ['Treg Naive', 'Treg Memory']
-        }),
-    'pbmc_cd8_subtypes': PBMCSignatureConfig(
+            "CD4 CTL": ["CD4 CTL"],
+            "CD4 Naive": ["CD4 Naive"],
+            "CD4 Proliferating": ["CD4 Proliferating"],
+            "CD4 TCM": ["CD4 TCM_1", "CD4 TCM_3", "CD4 TCM_2"],
+            "CD4 TEM": ["CD4 TEM_3", "CD4 TEM_1", "CD4 TEM_2", "CD4 TEM_4"],
+            "Treg": ["Treg Naive", "Treg Memory"],
+        }
+    ),
+    "pbmc_cd8_subtypes": PBMCSignatureConfig(
         high_level_low_level_mapping={
-            'CD8 Naive': ['CD8 Naive', 'CD8 Naive_2'],
-            'CD8 Proliferating': ['CD8 Proliferating'],
-            'CD8 TCM': ['CD8 TCM_1', 'CD8 TCM_3', 'CD8 TCM_2'],
-            'CD8 TEM': ['CD8 TEM_2', 'CD8 TEM_1', 'CD8 TEM_4',
-                        'CD8 TEM_5', 'CD8 TEM_6', 'CD8 TEM_3'],
-        }),
+            "CD8 Naive": ["CD8 Naive", "CD8 Naive_2"],
+            "CD8 Proliferating": ["CD8 Proliferating"],
+            "CD8 TCM": ["CD8 TCM_1", "CD8 TCM_3", "CD8 TCM_2"],
+            "CD8 TEM": [
+                "CD8 TEM_2",
+                "CD8 TEM_1",
+                "CD8 TEM_4",
+                "CD8 TEM_5",
+                "CD8 TEM_6",
+                "CD8 TEM_3",
+            ],
+        }
+    ),
 }
 
 
 @dataclass
 class ViolinPlotConfig:
     """Configuration for signature file loading."""
+
     textwrap_width: int = 8
     height: float = 1.95
     aspect: float = 0.925
@@ -197,73 +247,73 @@ class ViolinPlotConfig:
 
     def __post_init__(self):
         if self.fontsizes is None:
-            self.fontsizes = {'title': 12, 'labels': 11, 'ticks': 11, 'legend': 11}
+            self.fontsizes = {"title": 12, "labels": 11, "ticks": 11, "legend": 11}
 
 
 VIOLIN_PLOT_CONFIG = {
-    'breast_malignant': ViolinPlotConfig(
+    "breast_malignant": ViolinPlotConfig(
         aspect=2.5,
         wspace=0.075,
         col_wrap=2,
         legend_bbox_anchor=(1.125, 1),
     ),
-    'luad_kim_malignant': ViolinPlotConfig(
+    "luad_kim_malignant": ViolinPlotConfig(
         aspect=1.15,
         wspace=0.15,
         legend_bbox_anchor=(1.13, 1),
     ),
-    'luad_kim_malignant_2': ViolinPlotConfig(
+    "luad_kim_malignant_3ca": ViolinPlotConfig(
         aspect=1.15,
         wspace=0.15,
         legend_bbox_anchor=(1.13, 1),
     ),
-    'skin_malignant': ViolinPlotConfig(
+    "skin_malignant_manual": ViolinPlotConfig(
         textwrap_width=9,
         aspect=1.85,
         wspace=0.1,
         legend_bbox_anchor=(1.05, 1),
         col_wrap=2,
-        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
+        fontsizes={"title": 12, "labels": 11, "ticks": 10, "legend": 11},
     ),
-    'skin_malignant_2': ViolinPlotConfig(
+    "skin_malignant": ViolinPlotConfig(
         textwrap_width=9,
         aspect=1.85,
         wspace=0.1,
         legend_bbox_anchor=(1.05, 1),
         col_wrap=2,
-        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
+        fontsizes={"title": 12, "labels": 11, "ticks": 10, "legend": 11},
     ),
-    'ovarian_malignant': ViolinPlotConfig(
+    "ovarian_malignant": ViolinPlotConfig(
         textwrap_width=7,
         height=2,
         aspect=3,
         legend_bbox_anchor=(1, 1),
         col_wrap=2,
-        fontsizes={'title': 12, 'labels': 10, 'ticks': 10, 'legend': 10}
+        fontsizes={"title": 12, "labels": 10, "ticks": 10, "legend": 10},
     ),
-    'ovarian_malignant_2': ViolinPlotConfig(
+    "ovarian_malignant_cellxgene": ViolinPlotConfig(
         textwrap_width=7,
         height=2,
         aspect=3,
         legend_bbox_anchor=(1, 1),
         col_wrap=2,
-        fontsizes={'title': 12, 'labels': 10, 'ticks': 10, 'legend': 10}
+        fontsizes={"title": 12, "labels": 10, "ticks": 10, "legend": 10},
     ),
-    'pbmc_b_mono_nk': ViolinPlotConfig(
+    "pbmc_b_mono_nk": ViolinPlotConfig(
         textwrap_width=7,
         sharey=True,
         aspect=1.05,
         legend_bbox_anchor=(1.125, 1),
-        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
+        fontsizes={"title": 12, "labels": 11, "ticks": 10, "legend": 11},
     ),
-    'pbmc_b_subtypes': ViolinPlotConfig(
+    "pbmc_b_subtypes": ViolinPlotConfig(
         textwrap_width=7,
         sharey=True,
         aspect=1.05,
         legend_bbox_anchor=(1.075, 1),
-        fontsizes={'title': 12, 'labels': 11, 'ticks': 10, 'legend': 11}
+        fontsizes={"title": 12, "labels": 11, "ticks": 10, "legend": 11},
     ),
-    'pbmc_cd4_subtypes': ViolinPlotConfig(
+    "pbmc_cd4_subtypes": ViolinPlotConfig(
         textwrap_width=6,
         height=2.5,
         aspect=1.75,
@@ -271,7 +321,7 @@ VIOLIN_PLOT_CONFIG = {
         wspace=0.075,
         legend_bbox_anchor=(1.05, 1),
     ),
-    'pbmc_cd8_subtypes': ViolinPlotConfig(
+    "pbmc_cd8_subtypes": ViolinPlotConfig(
         textwrap_width=5,
         col_wrap=2,
         aspect=1.5,
@@ -282,11 +332,11 @@ VIOLIN_PLOT_CONFIG = {
 
 ####################################################################################
 # AVAILABLE NORMALIZATION METHODS
-NORM_METHODS = ['mean', 'median', 'CP10k']
+NORM_METHODS = ["mean", "median", "CP10k"]
 
 ####################################################################################
 # APPLICATION LEVEL OF DGEX
-DGEX_GRANULARITY = ['all', 'individual', 'pseudobulk']
+DGEX_GRANULARITY = ["all", "individual", "pseudobulk"]
 
 # FOR SAMPLE BASED DGEX PERCENTAGES OF OVERLAP
 PCTGS = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.925, 0.95, 0.975, 0.99, 1]
@@ -334,18 +384,17 @@ SCORING_METHODS = [
             "score_name": "Scanpy",
         },
     },
-
     {
         "scoring_method": "jasmine_scoring",
         "sc_params": {
-            "score_method": 'likelihood',
+            "score_method": "likelihood",
             "score_name": "Jasmine_LH",
         },
     },
     {
         "scoring_method": "jasmine_scoring",
         "sc_params": {
-            "score_method": 'oddsratio',
+            "score_method": "oddsratio",
             "score_name": "Jasmine_OR",
         },
     },
@@ -357,5 +406,19 @@ SCORING_METHODS = [
         },
     },
 ]
-METHOD_WO_MEAN = ['scanpy_scoring', 'ucell_scoring', 'jasmine_scoring']
-METHOD_WITH_GENE_POOL = ['adjusted_neighborhood_scoring', 'seurat_scoring', 'seurat_ag_scoring', 'seurat_lvg_scoring']
+METHOD_WO_MEAN = ["scanpy_scoring", "ucell_scoring", "jasmine_scoring"]
+METHOD_WITH_GENE_POOL = [
+    "adjusted_neighborhood_scoring",
+    "seurat_scoring",
+    "seurat_ag_scoring",
+    "seurat_lvg_scoring",
+]
+
+
+if __name__ == "__main__":
+    for folder in folders_to_create:
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+            print(f"Created folder {folder=}")
+        else:
+            print(f"Folder {folder=} already exists")

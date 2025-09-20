@@ -9,7 +9,8 @@ import scanpy as sc
 
 sys.path.append('.')
 
-from .constants import (
+# from .constants import (
+from constants import (
     # Paths
     BASE_PATH_RAW_CANCER,
     BASE_PATH_RAW_PBMC,

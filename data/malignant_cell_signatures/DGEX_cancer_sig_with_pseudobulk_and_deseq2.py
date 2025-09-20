@@ -79,7 +79,6 @@ def main(config):
         # Visualize
         fig = sc.pl.umap(adata, color=['malignant_key', 'celltype'], return_fig=True, frameon=False, show=False)
         fig.savefig(os.path.join(storing_path, f'UMAP_{config.dataset}_{config.norm_method}_norm.png'), dpi=300)
-        # plt.close(fig)
 
     # Get pseudo-bulk profile
     sc.logging.info(f'Get pseudo-bulk profiles per sample and malignancy.')

@@ -1,9 +1,11 @@
-# ANS: Adjusted Neighborhood Scoring to  improve gene signature-based cell annotation in single-cell RNA-seq data
+# Robust and efficient annotation of cell states through gene signature scoring
 This repository accompanies the work:
-Laure Ciernik, Agnieszka Kraft, Florian Barkmann, Joséphine Yates, and Valentina Boeva, “ANS: Adjusted Neighborhood Scoring to  improve gene signature-based cell annotation in single-cell RNA-seq data”. doi: [https://doi.org/10.1101/2023.09.20.558114](https://doi.org/10.1101/2023.09.20.558114)
+Laure Ciernik*, Agnieszka Kraft*, Florian Barkmann, Joséphine Yates, and Valentina Boeva, “Robust and efficient annotation of cell states through gene signature scoring”. doi: [https://doi.org/10.1101/2023.09.20.558114](https://doi.org/10.1101/2023.09.20.558114)
+
+*Equal contribution
 
 It contains the Jupyter notebooks and scripts used for the experiments and visualizations. The code presented is shared for 
-reproducibility purposes and is **not organized as a package**. The implementation of the novel signature scoring method ANS and others used in the article can be found and installed from the following [packaged GitHub repository](https://github.com/lciernik/ANS_signature_scoring). For further information, contact 
+reproducibility purposes and is **not organized as a package**. The implementation of the novel signature scoring method ANS and others used in the article can be found and installed from the following [packaged GitHub repository](https://github.com/BoevaLab/ANS_signature_scoring). For further information, contact 
 [laure.ciernik@gmail.com](mailto:laure.ciernik@gmail.com). 
 
 ### Disclaimer
@@ -90,5 +92,5 @@ The preprocessed datasets in `.h5ad` format for CRC, ESCC, LUAD, breast cancer, 
 
 
 ## Correspondance 
-First: [Laure Ciernik](mailto:laure.ciernik@gmail.com)
+First: [Laure Ciernik](mailto:laure.ciernik@gmail.com) and [Agnieszka Kraft](mailto:agnieszka.kraft@inf.ethz.ch)
 Second: [Prof. Valentina Boeva](mailto:valentina.boeva@inf.ethz.ch)

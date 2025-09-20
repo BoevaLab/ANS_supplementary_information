@@ -69,6 +69,7 @@ dependencies:
       - get-annotations==0.1.2
       - gssnng==0.5.0
       - gtfparse==2.5.0
+      - gdown==5.2.0
       - h11==0.14.0
       - h5py==3.10.0
       - harmonypy==0.0.9

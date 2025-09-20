@@ -137,7 +137,7 @@ def get_appendix(normalization_method, pp_sample_based):
 def main(config):
     appendix = get_appendix(config.norm_method, config.sample_based)
 
-    if config.dataset in ['ovarian_malignant', 'ovarian_malignant_2', 'skin_malignant']:
+    if config.dataset in ['ovarian_malignant', 'ovarian_malignant_cellxgene', 'skin_malignant_manual']:
         fn_data = os.path.join(BASE_PATH_RAW_CANCER, f'{config.dataset}.h5ad')
     else:
         fn_data = os.path.join(BASE_PATH_CANSIG_PP_CANCER, f'{config.dataset}.h5ad')
@@ -162,7 +162,6 @@ if __name__ == '__main__':
                         default='mean', help='Indicate normalization method used in the preprocessing.')
     parser.add_argument('--sample_based', action='store_true', help='Preprocess each sample individually, '
                                                                     'else the entire dataset.')
-
     args = AttributeDict(vars(parser.parse_args()))
 
     start = datetime.now()

@@ -239,25 +239,27 @@ def main(args):
 
     # Create plots
     ## Violin plots
-    df_melted = prepare_data_for_violin_plot(adata, args.gt_annotation_col, score_cols)
-    fig = get_violin_all_methods(df_melted,
-                                 args.gt_annotation_col,
-                                 hue_order=signature_order,
-                                 **asdict(VIOLIN_PLOT_CONFIG[args.dataset])
-                                 )
-    fig.savefig(storing_path / "violin_all_methods.pdf", bbox_inches='tight')
-    fig.savefig(storing_path / "violin_all_methods.svg", bbox_inches='tight')
-    if args.verbose:
-        print(f"""Saved violin plot to {storing_path / "violin_all_methods.pdf"}""")
+    if args.plot_n_save_violin:
+        df_melted = prepare_data_for_violin_plot(adata, args.gt_annotation_col, score_cols)
+        fig = get_violin_all_methods(df_melted,
+                                    args.gt_annotation_col,
+                                    hue_order=signature_order,
+                                    **asdict(VIOLIN_PLOT_CONFIG[args.dataset])
+                                    )
+        fig.savefig(storing_path / "violin_all_methods.pdf", bbox_inches='tight')
+        fig.savefig(storing_path / "violin_all_methods.svg", bbox_inches='tight')
+        if args.verbose:
+            print(f"""Saved violin plot to {storing_path / "violin_all_methods.pdf"}""")
 
     ## Confusion matrices
-    for key, val in metrics.items():
-        conf_mat = val['conf_mat']
-        fig = plot_confusion_matrix(conf_mat, signature_order, key)
-        fig.savefig(storing_path / f"confusion_matrix_{key}.pdf", bbox_inches='tight')
-        fig.savefig(storing_path / f"confusion_matrix_{key}.svg", bbox_inches='tight')
-        if args.verbose:
-            print(f"""Saved confusion matrix to {storing_path / f"confusion_matrix_{key}.pdf"}""")
+    if args.plot_n_save_confusion_matrix:
+        for key, val in metrics.items():
+            conf_mat = val['conf_mat']
+            fig = plot_confusion_matrix(conf_mat, signature_order, key)
+            fig.savefig(storing_path / f"confusion_matrix_{key}.pdf", bbox_inches='tight')
+            fig.savefig(storing_path / f"confusion_matrix_{key}.svg", bbox_inches='tight')
+            if args.verbose:
+                print(f"""Saved confusion matrix to {storing_path / f"confusion_matrix_{key}.pdf"}""")
 
 
 if __name__ == "__main__":
@@ -274,6 +276,10 @@ if __name__ == "__main__":
                         help="Whether to store the signatures used for scoring.")
     parser.add_argument("--save_adata", action="store_true",
                         help="Figures and data only stored at storing path it flag is set.")
+    parser.add_argument("--plot_n_save_violin", action="store_true",
+                        help="Plot and save violin plot.")
+    parser.add_argument("--plot_n_save_confusion_matrix", action="store_true",
+                        help="Plot and save confusion matrix.")
     parser.add_argument("--base_storing_path", default=os.path.join(BASE_PATH_RESULTS, "comparable_score_ranges"),
                         help="Path where to store the results.")
     parser.add_argument("--verbose", action="store_true", help="Print additional information.")
