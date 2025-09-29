@@ -144,25 +144,91 @@ Download all preprocessed datasets and annotations from our [Google Drive folder
 The `experiments` and `notebooks` folders contain the code for executed experiments. While the first contains the python scripts and R scripts, to run the experiments, the notebooks are used to create the visualizations. See "Rerunning experiments" below for details on how to rerun the experiments.
 
 ## 🔬 Running Experiments
+All experiments expect downloaded data!
 
 ### 0. Malignant signature extraction: CRC and ESCC
+This step can be skipped if the anntations have been downloaded successfully from the Drive, see [Data Setup](#data-setup).
+
+Run:
+```bash
+cd data/sh_files
+bash run_dgex_cancer_sigs_with_pseudobulks.sh
+bash run_dgex_cancer_sigs_on_individual_samples.sh
+bash run_dgex_non_rel_genes_with_pseudobulks.sh
+```
+
+The scripts are supposed to load the preprocessed data, compute the malignant cell-specific signatures and store them in the `[Project location]/data/annotations` folder. 
 
 ### 1. Comparison of score equality between Python and R implementations
+To compare the euqality of implementations in Python and R (**Figure 1b**), we follow the following steps:
+
+1. First, load the data and convert it to single-cell experiments in R, i.e., running first part of `notebooks/construction_scoring_methods/compare_python_and_R_versions_of_scoring_methods.ipynb`
+2. Adapt the missing paths in the `R` script `notebooks/construction_scoring_methods/scoring_crc_escc_luad_w_ucell_jasmine_seurat_ans.R` and run it
+3. Run the rest of the notebook in 1. It will create the subplot (**Figure 1b**)
 
 ### 2. Optimal control gene selection
-To generate Figure 1.c 
+To generate **Figure 1c**, first run the following experiment script
 
 ```bash
 cd experiments
 bash run_all_experiments_on_dataset.sh
 ```
-### 3.Evaluating scoring method robustness to batch effects: individual vs. joint sample scoring
+
+For the visualization:
+1. **Figure 1c. and S3**: Run `notebooks/control_genes_selection_experiments/figures_contol_bias_experiment.ipynb` 
+   > [!NOTE] The `test_folder` variable has to be set to a results folder created by the previous script, e.g., `[path to project]/experiments/control_genes_selection/mean_var_per_gene_scores/B memory kappa`
+2. **Figure S1**: Run `notebooks/control_genes_selection_experiments/Control_gene_selection_comparison_last_expression_bin.ipynb`
+
+
+### 3. Evaluating scoring method robustness to batch effects: individual vs. joint sample scoring
+To get **Figure 1d**. we please run, 
+```bash
+cd experiments/data_composition_experiments
+
+bash run_data_comp_exp.sh crc
+bash run_data_comp_exp.sh escc
+```
+
+It will store the plots at `[project location]/experiments/data_composition_experiments/[crc | escc]/mean_norm/dgex_on_pseudobulk/strip_plots`
+
+For **Figure S5**. run `notebooks/data_composition_experiments/variance_decrease.ipynb` 
 
 ### 4. Evaluating scoring method robustness to scoring small signatures
+To recreate **Figure S4b and S6a**, first run the scoring experiments: 
+
+```bash
+cd  experiments/signature_lengths_experiments
+bash run_sig_length_exp.sh escc 100 
+bash run_sig_length_exp.sh crc 150 
+```
+
+Then use notebook `notebooks/signature_lengths_experiments/result_heatmaps_figures.ipynb` to create the figures.
+
 
 ### 5. Evaluating scoring method robustness to noise in gene expression signatures
+To recreate **Figure S4c and S6b**, first run the scoring experiments: 
 
-### 6. Evaluating score range comparability between scoring methods for cell state annotaion
+```bash
+cd  experiments/signature_noise_addition_experiments
+bash run_sig_noise_exp.sh escc 100 
+bash run_sig_noise_exp.sh crc 100 
+```
+
+Then use notebook `notebooks/signature_noise_addition_experiments/sig_noise_experiment_figures.ipynb` to create the figures.
+
+
+### 6. Evaluating score range comparability between scoring methods for cell state annotation
+To create the subplots of **Figure 2** as well as the **Figures S7-S10**, run the following experiments scripts:
+
+```bash
+cd experiments/comparable_score_ranges
+bash run_comp_range_exp.sh
+```
+
+To create the all figures run: `notebooks/comparable_score_ranges/create_plot.ipynb`. 
+
+### 7. Runtime experiments
+To rerun the runtime experiment (**Figure S2**) please run the notebook `/experiments/runtime/runtime_comparison.ipynb`.
 
 ### Case study: EMT signal decoupling
 See `notebooks/EMT_scoring_experiments/` for the main case study demonstrating decoupling of EMT signals in stromal and cancer cells.

@@ -1,6 +1,5 @@
 #!/bin/bash
-
-cd comparable_score_ranges
+set -e
 
 datasets=(
     "breast_malignant"
