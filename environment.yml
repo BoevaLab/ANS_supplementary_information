@@ -118,6 +118,7 @@ dependencies:
       - mccabe==0.7.0
       - mdurl==0.1.2
       - memoized-property==1.0.3
+      - memory-profiler==0.61.0
       - mistune==3.0.2
       - ml-collections==0.1.1
       - ml-dtypes==0.3.2

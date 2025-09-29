@@ -30,3 +30,4 @@ pyreadr
 matplotlib_venn
 gdown
 adjustText
+memory-profiler

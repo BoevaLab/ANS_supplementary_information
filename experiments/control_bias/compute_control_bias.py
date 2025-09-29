@@ -13,13 +13,12 @@ from signaturescoring.utils.utils import (
 sys.path.append("../..")
 from data.constants import DATASETS, BASE_PATH_DATA, BASE_PATH_EXPERIMENTS
 from data.load_data import load_datasets
-from data.preprocess_pbmc_helper import preprocess_dataset
+from data.preprocessing.preprocess_pbmc_helper import preprocess_dataset
 from experiments.experiment_utils import (AttributeDict,
                                           get_scoring_method_params)
 
 ALLOWED_CELL_SUBTYPES = ['B memory kappa', 'B naive kappa', 'B naive lambda', 'CD14 Mono', 'CD16 Mono', 'CD4 CTL', 'CD4 Naive', 'CD4 TCM_1', 'CD4 TCM_3', 'CD4 TEM_1', 'CD4 TEM_3', 'CD8 Naive', 'CD8 TEM_1', 'CD8 TEM_2', 'CD8 TEM_4', 'CD8 TEM_5', 'MAIT', 'NK_1', 'NK_2', 'NK_3', 'Platelet', 'cDC2_2']
 SC_METHODS = ["adjusted_neighborhood_scoring", "seurat_scoring", "seurat_ag_scoring", "seurat_lvg_scoring", "scanpy_scoring"]
-# SC_METHODS = ["adjusted_neighborhood_scoring", "seurat_scoring"]
 
 def _generate_storing_path(base_path, subtype):
     st_path_dec = os.path.join(base_path, subtype)

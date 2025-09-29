@@ -3,6 +3,7 @@ import os
 from constants import BASE_PATH_PREPROCESSED, BASE_PATH_DATA
 
 CANSIG_PP_URLS = {
+    "raw_data": "https://drive.google.com/drive/folders/1Kp_4gvEwGMOdiEYVupyQAns_yryMMYGH?usp=sharing"
     "cansig_processed": "https://drive.google.com/drive/folders/1KITDZ1pwYDJtZSe0aJln-tn1ynpPZm4z?usp=drive_link"
 }
 
