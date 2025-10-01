@@ -231,7 +231,7 @@ To create the all figures run: `notebooks/comparable_score_ranges/create_plot.ip
 To rerun the runtime experiment (**Figure S2**) please run the notebook `/experiments/runtime/runtime_comparison.ipynb`.
 
 ### Case study: EMT signal decoupling
-See `notebooks/EMT_scoring_experiments/` for the main case study demonstrating decoupling of EMT signals in stromal and cancer cells.
+See `notebooks/EMT_scoring_experiments/` for the main case study demonstrating decoupling of EMT signals in stromal and cancer cells. It contains a README.md file with the steps to reproduce the experiments.
 
 
 ## 📧 Correspondance
